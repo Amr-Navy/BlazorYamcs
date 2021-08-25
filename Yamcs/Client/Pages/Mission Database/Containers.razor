@@ -1,0 +1,48 @@
+﻿@page "/missiondb/containers"
+@inject HttpClient Http
+
+<h1>Containers</h1>
+
+
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Max Interval</th>
+                <th>Size in Bits</th>
+                <th>Base Containere</th>
+                <th>Restriction Criteria</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts.name)
+            {
+                <tr>
+                    <td>@forecast</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PacketNameResponse forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+    }
+
+    public class PacketNameResponse
+    { 
+    public string[] name { get; set; }
+
+    }
+}

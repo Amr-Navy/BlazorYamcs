@@ -1,0 +1,178 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Yamcs</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="home">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="links">
+                <span class="oi oi-link-intact" aria-hidden="true"></span> Links
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu1=!expandSubMenu1">
+                <span class="dropdown-toggle  oi oi-dashboard " aria-hidden="true"></span> Telemetry
+            </NavLink>
+            @if (expandSubMenu1)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Packets
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Parameters
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Displays
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+                <span class="oi oi-command" aria-hidden="true"></span> Algorithms
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Events
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+                <span class="oi oi-bell" aria-hidden="true"></span> Alarms
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu2=!expandSubMenu2">
+                <span class="dropdown-toggle oi oi-wifi" aria-hidden="true"></span> Commanding
+            </NavLink>
+            @if (expandSubMenu2)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Send a command
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Command Stacks
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Command History
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Queues
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu3=!expandSubMenu3">
+                <span class="dropdown-toggle oi oi-timer" aria-hidden="true"></span> Timeline
+            </NavLink>
+            @if (expandSubMenu3)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Chart
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Views
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Bands
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Items
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu4=!expandSubMenu4">
+                <span class="dropdown-toggle oi oi-briefcase" aria-hidden="true"></span> Mission Database
+            </NavLink>
+            @if (expandSubMenu4)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> OverView
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Parameters
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Containers
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Commands
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="">
+                            <span class="oi oi-dashboard" aria-hidden="true"></span> Algorithms
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+                <span class="oi oi-folder" aria-hidden="true"></span> Archive Browser
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool expandSubMenu1 = false;
+    private bool expandSubMenu2 = false;
+    private bool expandSubMenu3 = false;
+    private bool expandSubMenu4 = false;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

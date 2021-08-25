@@ -1,0 +1,49 @@
+﻿@page "/missiondb/parameters"
+@inject HttpClient Http
+
+<h1>Parameters</h1>
+
+<div>
+
+</div>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Units</th>
+                <th>Data Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts.name)
+            {
+                <tr>
+                    <td>@forecast</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PacketNameResponse forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+    }
+
+    public class PacketNameResponse
+    { 
+    public string[] name { get; set; }
+
+    }
+}

@@ -1,0 +1,125 @@
+﻿@page "/"
+@inject YamcsClient client
+
+
+
+
+<div class="row">
+    <div class="col ">
+
+        <div class="card-body">
+            <a class="btn btn-success" href="Event/create"><i class="oi oi-plus"></i> Create New</a>
+            <button class="btn btn-primary" @onclick="Start">Start </button>
+            <button class="btn btn-primary" @onclick="Stop">Stop </button>
+            <button class="btn btn-primary" @onclick="Restart">Restart </button>
+        </div>
+
+    </div>
+</div>
+<span>Filter:&nbsp;</span>
+<input @bind="Filter" @bind:event="oninput" />
+<br />
+<br />
+@if (Instances == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Instance</th>
+                <th>Default Processor</th>
+                <th>Labels</th>
+                <th>Template</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var instance in filteredInstances)
+            {
+                <tr>
+                    <td> </td>
+                    <td>@instance.name</td>
+                    <td>@instance.processors[0].name</td>
+                    <td></td>
+                    <td>@instance.template</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ListIntancesResponse Instances;
+    private IEnumerable<Instance> filteredInstances => Instances.instances.ToList().Where(x => x.name == Filter);
+    string Filter = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            Instances = await client.getInstances();
+            Console.WriteLine(Instances.instances[0].state);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //  Instances = await client.getInstances();
+            //  Console.WriteLine(Instances.instances[0].state);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+    public async void Start()
+    {
+        try
+        {
+            await client.startInstance(Instances.instances[0].name);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+    }
+    public async void Stop()
+    {
+        try
+        {
+            await client.stopInstance(Instances.instances[0].name);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+    }
+    public async void Restart()
+    {
+        try
+        {
+            await client.restartInstance(Instances.instances[0].name);
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

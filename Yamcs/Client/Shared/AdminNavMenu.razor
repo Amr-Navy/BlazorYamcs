@@ -1,0 +1,109 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Admin Area</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@AdminNavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="systeminfo">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/plugins">
+                <span class="oi oi-home" aria-hidden="true"></span> Plugins
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu1=!expandSubMenu1">
+                <span class="oi oi-plus" aria-hidden="true"></span> Access Control
+            </NavLink>
+            @if (expandSubMenu1)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/admin/accesscontrol/users">
+                            <span class="oi oi-person" aria-hidden="true"></span> Users
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/admin/accesscontrol/serviceaccounts">
+                            <span class="oi oi-lightbulb" aria-hidden="true"></span> Service accounts
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/admin/accesscontrol/groups">
+                            <span class="oi oi-people" aria-hidden="true"></span> Groups
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/admin/accesscontrol/roles">
+                            <span class="oi oi-home" aria-hidden="true"></span> Roles
+                        </NavLink>
+                    </li>
+                </ul>
+
+
+            }
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/clientconnections">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Client connections
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/services">
+                <span class="oi oi-lightbulb" aria-hidden="true"></span> Services
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/processortypes">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Processor types
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/databases">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Databases
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/replication">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Replication
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/rocksdb">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> RocksDB
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/apiroutes">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Api routes
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/leapseconds">
+                <span class="oi oi-clock" aria-hidden="true"></span> Leap Seconds
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/admin/threads">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Threads
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool expandSubMenu1 = false;
+    private string AdminNavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/telemetry/display"
+@inject HttpClient Http
+
+<h1>Display</h1>
+
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Packet Name</th>
+                <th>Generation Time</th>
+                <th>Receiption Time</th>
+                <th>Data</th>
+                <th>Size</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts.name)
+            {
+                <tr>
+                    <td>@forecast</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PacketNameResponse forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+    }
+
+    public class PacketNameResponse
+    { 
+    public string[] name { get; set; }
+
+    }
+}

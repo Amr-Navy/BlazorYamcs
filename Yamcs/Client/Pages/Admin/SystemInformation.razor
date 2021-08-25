@@ -1,0 +1,114 @@
+﻿@page "/Admin/admin"
+@layout AdminLayout
+@inject YamcsClient client 
+
+<h1>Admin Home</h1>
+
+
+
+@if (inforesponse == null)
+{
+    <p><em>Loading SystemInfo...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>YamcsVersion</td>
+                <td>@inforesponse.YamcsVersion</td>
+            </tr>
+            <tr>
+                <td>Revision</td>
+                <td>@inforesponse.Revision</td>
+            </tr>
+            <tr>
+                <td>ServerId</td>
+                <td>@inforesponse.ServerId</td>
+            </tr>
+            <tr>
+                <td>Uptime</td>
+                <td>@inforesponse.Uptime</td>
+            </tr>
+            <tr>
+                <td>Jvm</td>
+                <td>@inforesponse.Jvm</td>
+            </tr>
+            <tr>
+                <td>WorkingDirectory</td>
+                <td>@inforesponse.WorkingDirectory</td>
+            </tr>
+            <tr>
+                <td>ConfigDirectory</td>
+                <td>@inforesponse.ConfigDirectory</td>
+            </tr>
+            <tr>
+                <td>DataDirectory</td>
+                <td>@inforesponse.DataDirectory</td>
+            </tr>
+            <tr>
+                <td>CacheDirectory</td>
+                <td>@inforesponse.CacheDirectory</td>
+            </tr>
+            <tr>
+                <td>Os</td>
+                <td>@inforesponse.Os</td>
+            </tr>
+            <tr>
+                <td>Arch</td>
+                <td>@inforesponse.Arch</td>
+            </tr>
+            <tr>
+                <td>AvailableProcessors</td>
+                <td>@inforesponse.AvailableProcessors</td>
+            </tr>
+            <tr>
+                <td>LoadAverage</td>
+                <td>@inforesponse.LoadAverage</td>
+            </tr>
+            <tr>
+                <td>HeapMemory</td>
+                <td>@inforesponse.HeapMemory</td>
+            </tr>
+            <tr>
+                <td>UsedHeapMemory</td>
+                <td>@inforesponse.UsedHeapMemory</td>
+            </tr>
+            <tr>
+                <td>MaxHeapMemory</td>
+                <td>@inforesponse.MaxHeapMemory</td>
+            </tr>
+            <tr>
+                <td>NonHeapMemory</td>
+                <td>@inforesponse.NonHeapMemory</td>
+            </tr>
+            <tr>
+                <td>UsedNonHeapMemory</td>
+                <td>@inforesponse.UsedHeapMemory</td>
+            </tr>
+            <tr>
+                <td>JvmThreadCount</td>
+                <td>@inforesponse.JvmThreadCount</td>
+            </tr>
+            <tr>
+                <td>RootDirectories</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    private SystemInfoResponse inforesponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        inforesponse = await client.GetSystemInfoAsync();
+    }
+
+
+}
