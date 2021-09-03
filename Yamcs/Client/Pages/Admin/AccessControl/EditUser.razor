@@ -24,7 +24,7 @@
     {
 
         //await http.PutAsJsonAsync("api/Failures", fail);
-        EditUserRequest req = new EditUserRequest(Userinfo.name, Userinfo.email, Userinfo.active, Userinfo.superuser);
+        EditUserRequest req = new EditUserRequest(Userinfo.Name, Userinfo.Email, Userinfo.active, Userinfo.Superuser);
         var resp = await client.editUser(Username, req);
         if (resp.StatusCode == System.Net.HttpStatusCode.OK)
         {

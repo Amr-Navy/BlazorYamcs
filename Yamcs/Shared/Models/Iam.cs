@@ -5,72 +5,72 @@
     }
     public class ListRolesResponse
     {
-        public RoleInfo[] roleInfos { set; get; }
+        public RoleInfo[] RoleInfos { set; get; }
     }
     public class RoleInfo
     {
-        public string name { get; set; }
-        public string description { get; set; }
-        public string[] systemPrivilages { get; set; }
-        public ObjectPrivilageInfo[] objectPrivilageInfos { set; get; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string[] SystemPrivilages { get; set; }
+        public ObjectPrivilageInfo[] ObjectPrivilageInfos { set; get; }
 
     }
     public class ObjectPrivilageInfo
     {
-        public string type { get; set; }
+        public string Type { get; set; }
         public string[] Object { set; get; }
     }
     public class ListServiceAccountsResponse
     {
-        public ServiceAccountInfo[] groups { get; set; }
+        public ServiceAccountInfo[] Groups { get; set; }
     }
     public class ListGroupsRespons
     {
-        public GroupInfo[] groups { get; set; }
+        public GroupInfo[] Groups { get; set; }
     }
     public class ListUsersResponse
     {
-        public UserInfo[] users { set; get; }
+        public UserInfo[] Users { set; get; }
     }
     public class UserInfo
     {
-        public string name { get; set; }
-        public string displayName { get; set; }
-        public string email { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Email { get; set; }
         public bool active { set; get; }
-        public bool superuser { set; get; }
-        public UserInfo createdBy { set; get; }
-        public string creationTime { set; get; }  // RFC 3339
-        public string confirmationTime { set; get; }
-        public string lastLoginTime { set; get; }
-        public ObjectPrivilageInfo[] objectPrivilege { set; get; }
-        public GroupInfo[] groups { set; get; }
-        public ExternalIdentityInfo[] identities { set; get; }
-        public RoleInfo[] roles { set; get; }
-        public SignificanceLevelType clearance { set; get; }
+        public bool Superuser { set; get; }
+        public UserInfo CreatedBy { set; get; }
+        public string CreationTime { set; get; }  // RFC 3339
+        public string ConfirmationTime { set; get; }
+        public string LastLoginTime { set; get; }
+        public ObjectPrivilageInfo[] ObjectPrivilege { set; get; }
+        public GroupInfo[] Groups { set; get; }
+        public ExternalIdentityInfo[] Identities { set; get; }
+        public RoleInfo[] Roles { set; get; }
+        public SignificanceLevelType Clearance { set; get; }
     }
     public class GroupInfo
     {
-        public string name { get; set; }
+        public string Name { get; set; }
         public string description { get; set; }
-        public UserInfo[] users { get; set; }
-        public ServiceAccountInfo serviceAccounts { get; set; }
+        public UserInfo[] Users { get; set; }
+        public ServiceAccountInfo ServiceAccounts { get; set; }
     }
     public class ServiceAccountInfo
     {
-        public string name { get; set; }
-        public string displayname { get; set; }
-        public bool active { get; set; }
-        public UserInfo createdby { get; set; }
-        public string creationtime { set; get; }
-        public string confirmationTime { set; get; }
-        public string lastlogintime { get; set; }
+        public string Name { get; set; }
+        public string Displayname { get; set; }
+        public bool Active { get; set; }
+        public UserInfo Createdby { get; set; }
+        public string Creationtime { set; get; }
+        public string ConfirmationTime { set; get; }
+        public string Lastlogintime { get; set; }
     }
 
     public class ExternalIdentityInfo
     {
-        public string identity { get; set; }
-        public string provider { get; set; }
+        public string Identity { get; set; }
+        public string Provider { get; set; }
     }
     public enum SignificanceLevelType
     {
@@ -86,14 +86,14 @@
     {
         public CreateUserRequest(string _name, string _displayname, string _email)
         {
-            name = _name;
-            displayName = _displayname;
-            email = _email;
+            Name = _name;
+            DisplayName = _displayname;
+            Email = _email;
         }
-        public string name { set; get; }
-        public string displayName { set; get; }
-        public string email { set; get; }
-        public string password { set; get; }
+        public string Name { set; get; }
+        public string DisplayName { set; get; }
+        public string Email { set; get; }
+        public string Password { set; get; }
     }
 
     public class EditUserRequest

@@ -12,7 +12,7 @@
 { UserInfo User = new UserInfo();
             async Task createUser()
             {
-                CreateUserRequest req = new CreateUserRequest(User.name, User.displayName, User.email);
+                CreateUserRequest req = new CreateUserRequest(User.Name, User.DisplayName, User.Email);
                 await client.createUser(req);
                 uriHelper.NavigateTo("/admin/accesscontrol/users");
             } }

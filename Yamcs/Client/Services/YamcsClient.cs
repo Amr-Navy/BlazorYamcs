@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
-using Yamcs.Shared;
-using System.Net.NetworkInformation;
+﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
-using Yamcs.Shared.Models;
-using System.Xml.Linq;
-using System.Diagnostics;
-using Newtonsoft.Json;
 using System.Text;
-using MudBlazor;
+using System.Threading.Tasks;
+using Yamcs.Shared;
+using Yamcs.Shared.Models;
 
 namespace Yamcs.Client.Services
 {
@@ -20,12 +12,12 @@ namespace Yamcs.Client.Services
     {
         HttpClient http;
         public WebSocketClient webclient;
-        public YamcsClient(HttpClient _http,WebSocketClient _webSocketClient)
+        public YamcsClient(HttpClient _http, WebSocketClient _webSocketClient)
         {
             http = _http;
             webclient = _webSocketClient;
-            
-         
+
+
         }
         #region Get
         public async Task<SystemInfoResponse> GetSystemInfoAsync()
@@ -72,8 +64,9 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<LeapSecondsTableResponse>("/api/leap-seconds");
         }
-        public async Task<ListIntancesResponse> getInstances() { 
-        
+        public async Task<ListIntancesResponse> getInstances()
+        {
+
             return await http.GetFromJsonAsync<ListIntancesResponse>("/api/instances");
         }
         public async Task<Instance> getInstance(string name)
@@ -134,11 +127,11 @@ namespace Yamcs.Client.Services
         }
         public async Task<ListClientConnectionInfo> getClientConnections()
         {
-   
 
-           return  await http.GetFromJsonAsync<ListClientConnectionInfo>("/api/connections");
-                
-       
+
+            return await http.GetFromJsonAsync<ListClientConnectionInfo>("/api/connections");
+
+
         }
         public async Task<ListRocksdbResponse> getRocksDbDatabaseProperties()
         {
@@ -160,7 +153,7 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ListLinksResponse>($"/api/links/{instance}");
         }
-        public async Task<Link> getLink(string instance,string link)
+        public async Task<Link> getLink(string instance, string link)
         {
             return await http.GetFromJsonAsync<Link>($"/api/links/{instance}/{link}");
         }
@@ -168,11 +161,11 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ListProcessorResponse>($"/api/processors/{instance}");
         }
-        public async Task<Processor> getProcessor(string instance,string name)
+        public async Task<Processor> getProcessor(string instance, string name)
         {
             return await http.GetFromJsonAsync<Processor>($"/api/processors/{instance}/{name}");
         }
-        public async Task<ListCommandQueuesRespnse> getCommandQueues(string instance,string processorName, string queueName)
+        public async Task<ListCommandQueuesRespnse> getCommandQueues(string instance, string processorName, string queueName)
         {
             return await http.GetFromJsonAsync<ListCommandQueuesRespnse>($"/api/processors/{instance}/{processorName}/queues/");
         }
@@ -200,8 +193,8 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ListTableRespnse>($"/api/archive/{instance}/tables");
         }
-        public async Task<Table> getTable(string instance,string name)
-{
+        public async Task<Table> getTable(string instance, string name)
+        {
             return await http.GetFromJsonAsync<Table>($"/api/archive/{instance}/tables/{name}");
         }
         //public async Task<> getTableData(string instance,string name)
@@ -232,11 +225,11 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<SpaceSystemsPage>($"/api/mdb/{instance}");
         }
-        public async Task<SpaceSystem> getSpaceSystem(string instance,string qualifiedname)
+        public async Task<SpaceSystem> getSpaceSystem(string instance, string qualifiedname)
         {
             return await http.GetFromJsonAsync<SpaceSystem>($"/api/mdb/{instance}/space-systems{qualifiedname}");
         }
-        public async Task<ParametersPage> getParameters(string instance,int pagee,int quantityperpage)
+        public async Task<ParametersPage> getParameters(string instance, int pagee, int quantityperpage)
         {
             return await http.GetFromJsonAsync<ParametersPage>($"/api/mdb/{instance}/parameters?pos={pagee}&limit={quantityperpage}");
         }
@@ -248,7 +241,7 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<Parameter>($"/api/mdb/{instance}/parameters");
         }
-        public async Task<Parameter> getParameterValues(string instance,string QualifiedName)
+        public async Task<Parameter> getParameterValues(string instance, string QualifiedName)
         {
             return await http.GetFromJsonAsync<Parameter>($"/api/archive/{instance}/parameters{QualifiedName}");
         }
@@ -260,16 +253,16 @@ namespace Yamcs.Client.Services
         //{
         //    return await http.GetFromJsonAsync<>($"/api/archive/${instance}/parameters${QualifiedName}/ranges");
         //}
-        public async Task<CommandsPage> getCommands(string instance,int pagee,int quantityperpage)
+        public async Task<CommandsPage> getCommands(string instance, int pagee, int quantityperpage)
         {
             return await http.GetFromJsonAsync<CommandsPage>($"/api/mdb/{instance}/commands?pos={pagee}&limit={quantityperpage}");
         }
-        public async Task<Command> getCommand(string instance,string qualifiedName)
+        public async Task<Command> getCommand(string instance, string qualifiedName)
         {
             return await http.GetFromJsonAsync<Command>($"/api/mdb/{instance}/commands{qualifiedName}");
         }
-        public async Task<ContainersPage> getContainers(string instance,int pagee,int quantityperpage)
-{
+        public async Task<ContainersPage> getContainers(string instance, int pagee, int quantityperpage)
+        {
             return await http.GetFromJsonAsync<ContainersPage>($"/api/mdb/{instance}/containers?pos={pagee}&limit={quantityperpage}");
         }
         public async Task<Container> getContainer(string instance, string qualifiedName)
@@ -284,7 +277,7 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<AlgorithmsPage>($"/api/mdb/{instance}/algorithms");
         }
-        public async Task<Algorithm> getAlgorithm(string instance,string qualifiedName)
+        public async Task<Algorithm> getAlgorithm(string instance, string qualifiedName)
         {
             return await http.GetFromJsonAsync<Algorithm>($"/api/mdb/{instance}/algorithms{qualifiedName}");
         }
@@ -292,11 +285,11 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ServicesPage>($"/api/filetransfer/{instance}/services");
         }
-        public async Task<TransfersPage> getFileTransfers(string instance,string service)
+        public async Task<TransfersPage> getFileTransfers(string instance, string service)
         {
             return await http.GetFromJsonAsync<TransfersPage>($"/api/filetransfer/{instance}/{service}/transfers");
         }
-      
+
         //public async Task<ListGapsResponse> getGaps(string instance)
         //{
         //    return await http.GetFromJsonAsync<ListGapsResponse>($"/api/dass/gaps/${instance}");
@@ -307,39 +300,39 @@ namespace Yamcs.Client.Services
         #region Post
         public async Task<HttpResponseMessage> createProcessor(Processor p)
         {
-            return await http.PostAsJsonAsync($"/api/processors",p);
+            return await http.PostAsJsonAsync($"/api/processors", p);
         }
         public async Task<HttpResponseMessage> stopInstance(string name)
         {
-            return await http.PostAsync($"/api/instances/{name}:stop",null);
+            return await http.PostAsync($"/api/instances/{name}:stop", null);
         }
         public async Task<HttpResponseMessage> startInstance(string name)
         {
-            return await http.PostAsync($"/api/instances/{name}:start",null);
+            return await http.PostAsync($"/api/instances/{name}:start", null);
         }
         public async Task<HttpResponseMessage> restartInstance(string name)
         {
-            return await http.PostAsync($"/api/instances/{name}:restart",null);
+            return await http.PostAsync($"/api/instances/{name}:restart", null);
         }
-        public async Task<HttpResponseMessage> startService(string instance,string name)
+        public async Task<HttpResponseMessage> startService(string instance, string name)
         {
-            return await http.PostAsync($"/api/services/{instance}/{name}:start",null);
+            return await http.PostAsync($"/api/services/{instance}/{name}:start", null);
         }
         public async Task<HttpResponseMessage> stopService(string instance, string name)
         {
-            return await http.PostAsync($"/api/services/{instance}/{name}:stop",null);
+            return await http.PostAsync($"/api/services/{instance}/{name}:stop", null);
         }
         public async Task<HttpResponseMessage> createServiceAccount(CreateServiceAccountRequest account)
         {
-            return await http.PostAsJsonAsync($"/api/service-accounts",account);
+            return await http.PostAsJsonAsync($"/api/service-accounts", account);
         }
         public async Task<HttpResponseMessage> createUser(CreateUserRequest user)
         {
-            return await http.PostAsJsonAsync($"/api/users/",user);
+            return await http.PostAsJsonAsync($"/api/users/", user);
         }
         public async Task<HttpResponseMessage> createGroup(CreateGroupRequest group)
         {
-            return await http.PostAsJsonAsync($"/api/groups",group);
+            return await http.PostAsJsonAsync($"/api/groups", group);
         }
         //public async Task createInstance(CreateInstanceRequest options)
         //{
@@ -347,11 +340,11 @@ namespace Yamcs.Client.Services
         //}
         public async Task<HttpResponseMessage> createEvent(string instance, CreateEventRequest options)
         {
-            return await http.PostAsJsonAsync($"/api/archive/{instance}/events",options);
+            return await http.PostAsJsonAsync($"/api/archive/{instance}/events", options);
         }
         public async Task<HttpResponseMessage> issueCommand(string instance, string processorName, string qualifiedName)
         {
-            return await http.PostAsync($"/api/processors/{instance}/{processorName}/commands{qualifiedName}",null);
+            return await http.PostAsync($"/api/processors/{instance}/{processorName}/commands{qualifiedName}", null);
         }
 
 
@@ -366,33 +359,33 @@ namespace Yamcs.Client.Services
         public async Task<HttpResponseMessage> editUser(string username, EditUserRequest options)
         {
             var content = new StringContent(JsonConvert.SerializeObject(options), Encoding.UTF8, "application/json");
-            return  await http.PatchAsync($"/api/users/{username}", content);
-         
+            return await http.PatchAsync($"/api/users/{username}", content);
+
         }
         //public async Task editGroup(string username, EditGroupRequest options)
         //{
         //    await http.PutAsJsonAsync($"/api/groups/{username}", options);
         //}
-        public async Task<HttpResponseMessage> editLink(string instance,string name, EditLinkOptions options)
+        public async Task<HttpResponseMessage> editLink(string instance, string name, EditLinkOptions options)
         {
             return await http.PutAsJsonAsync($"/api/links/{instance}/{name}", options);
         }
         public async Task<HttpResponseMessage> enableLink(string instance, string name)
         {
-            EditLinkOptions op = new EditLinkOptions(Linkstate.enabled,true);
-            return await editLink(instance,name,op);
+            EditLinkOptions op = new EditLinkOptions(Linkstate.enabled, true);
+            return await editLink(instance, name, op);
         }
         public async Task disableLink(string instance, string name)
         {
-            EditLinkOptions op = new EditLinkOptions(Linkstate.disabled,false);
-            await editLink(instance,name,op);
+            EditLinkOptions op = new EditLinkOptions(Linkstate.disabled, false);
+            await editLink(instance, name, op);
         }
 
         public async Task<HttpResponseMessage> editCommandQueue(string instance, string processorName, string queueName, EditCommandQueueOptions option)
         {
-            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}",option);
+            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}", option);
         }
-        public async Task<HttpResponseMessage> editCommandQueueEntry(string instance, string processorName, string queueName,string uuid, EditCommandQueueEntryOptions option)
+        public async Task<HttpResponseMessage> editCommandQueueEntry(string instance, string processorName, string queueName, string uuid, EditCommandQueueEntryOptions option)
         {
             return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}/entries/{uuid}", option);
         }
@@ -400,9 +393,9 @@ namespace Yamcs.Client.Services
         //{
         //    await http.PutAsJsonAsync($"/api/processors/{instance}/{processor}/alarms{alarm}/{sequenceNumber}",opt);
         //}
-        public async Task<HttpResponseMessage> setParameterValue(string instance, string processorName, string qualifiedName,Value val)
+        public async Task<HttpResponseMessage> setParameterValue(string instance, string processorName, string qualifiedName, Value val)
         {
-            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/parameters{qualifiedName}",val);
+            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/parameters{qualifiedName}", val);
         }
         #endregion
 
@@ -419,7 +412,7 @@ namespace Yamcs.Client.Services
         {
             return await http.DeleteAsync($"/api/service-accounts/{name}");
         }
-        public async Task<HttpResponseMessage> deleteIdentity(string name,string provider)
+        public async Task<HttpResponseMessage> deleteIdentity(string name, string provider)
         {
             return await http.DeleteAsync($"/api/service-accounts/{name}");
         }
@@ -427,8 +420,8 @@ namespace Yamcs.Client.Services
         {
             return await http.DeleteAsync($"/api/groups/{name}");
         }
-        public async Task<HttpResponseMessage> deleteReplayProcessor(string instance,string processor)
-{
+        public async Task<HttpResponseMessage> deleteReplayProcessor(string instance, string processor)
+        {
             return await http.DeleteAsync($"/api/processors/{instance}/{processor}");
         }
         public async Task<HttpResponseMessage> closeClientConnection(string id)
@@ -447,10 +440,12 @@ namespace Yamcs.Client.Services
         }
         public async Task CreateTimeSubscription(string _instance, string _processor)
         {
-            SubscribeTimeRequest subscribeTMStatistics = new (_instance, _processor);
-            var req = new WebSocketRequest<SubscribeTimeRequest>();
-            req.Type = "time";
-            req.Options = subscribeTMStatistics;
+            SubscribeTimeRequest subscribeTMStatistics = new(_instance, _processor);
+            var req = new WebSocketRequest<SubscribeTimeRequest>
+            {
+                Type = "time",
+                Options = subscribeTMStatistics
+            };
             await webclient.Send<SubscribeTimeRequest>(req);
         }
         #endregion

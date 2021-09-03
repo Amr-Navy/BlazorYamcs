@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Reactive.Subjects;
-using System.Text.Json;
-
+﻿using System.Text.Json;
 using Yamcs.Client.Services;
 using Yamcs.Shared.Models;
 
@@ -11,10 +7,10 @@ namespace YamcsWebsocket.Client
 {
     internal class YamcsWebsocketPublicHandler
     {
-    
+
 
         private readonly YamcsClientStreams _streams;
-   
+
 
         public YamcsWebsocketPublicHandler(YamcsClientStreams streams)
         {
@@ -23,7 +19,7 @@ namespace YamcsWebsocket.Client
 
         public void OnMessage(string jsonString)
         {
-            var parsed = JsonSerializer.Deserialize<WebSocketResponse>(jsonString);
+            var parsed = YamcsSerialization.Deserialize<WebSocketResponse>(jsonString);
 
             switch (parsed.Type)
             {
@@ -35,12 +31,12 @@ namespace YamcsWebsocket.Client
                     StatisticsResponse.Handle(jsonString, _streams._StatisticsSubject);
                     break;
                 default:
-                       
-                       break;
+
+                    break;
             }
         }
 
-      
+
 
     }
 }

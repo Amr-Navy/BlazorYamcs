@@ -36,18 +36,18 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var user in UserInfoResponse.users)
+            @foreach (var user in UserInfoResponse.Users)
             {
                 <tr>
-                    <td>@user.name</td>
-                    <td>@user.creationTime</td>
+                    <td>@user.Name</td>
+                    <td>@user.CreationTime</td>
                     <td>@user.active</td>
-                    <td>@user.displayName</td>
-                    <td>@user.email</td>
-                    <td>@user.creationTime</td>
+                    <td>@user.DisplayName</td>
+                    <td>@user.Email</td>
+                    <td>@user.CreationTime</td>
                     <td><a href="#" class="btn btn-primary m-1">View</a></td>
-                    <td><a href="/Admin/editUser/@user.name" class="btn btn-primary m-1">Edit</a></td>
-                    <td><a href="#" class="btn btn-danger m-1" @onclick="@(()=>Delete(user.name))">Delete</a></td>
+                    <td><a href="/Admin/editUser/@user.Name" class="btn btn-primary m-1">Edit</a></td>
+                    <td><a href="#" class="btn btn-danger m-1" @onclick="@(()=>Delete(user.Name))">Delete</a></td>
                 </tr>
             }
         </tbody>

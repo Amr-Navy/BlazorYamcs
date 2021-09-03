@@ -5,12 +5,12 @@ namespace Yamcs.Client.Services
 {
     public class InstantState
     {
-     
+
         public string Instance { get; private set; }
         public string Processor { get; private set; }
 
         public event Action OnChange;
-      
+
         public void SetInstance(string instance)
         {
             Instance = instance;

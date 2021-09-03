@@ -18,6 +18,7 @@ namespace Yamcs.Shared.Models
         {
 
             var rep = YamcsSerialization.Deserialize<WebSocketResponse<StatisticsResponse>>(msg);
+            Console.WriteLine(rep.Type);
             subject.OnNext(rep);
 
         }
