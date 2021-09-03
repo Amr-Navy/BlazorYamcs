@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yamcs.Server", "Yamcs\Server\Yamcs.Server.csproj", "{AF74EB21-7611-4A68-ACEC-0B82C0F539BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yamcs.Server", "Yamcs\Server\Yamcs.Server.csproj", "{AF74EB21-7611-4A68-ACEC-0B82C0F539BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yamcs.Client", "Yamcs\Client\Yamcs.Client.csproj", "{4521ECF5-1538-42C6-B311-4D3DC5C9A881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yamcs.Client", "Yamcs\Client\Yamcs.Client.csproj", "{4521ECF5-1538-42C6-B311-4D3DC5C9A881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yamcs.Shared", "Yamcs\Shared\Yamcs.Shared.csproj", "{3C9BF24B-2BFE-4505-867F-D22CECAEDC87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yamcs.Shared", "Yamcs\Shared\Yamcs.Shared.csproj", "{3C9BF24B-2BFE-4505-867F-D22CECAEDC87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
     public class ListClearancesResponse
     {
-        public ClearanceInfo[] clearanceInfos { set; get; }
+        public ClearanceInfo[] ClearanceInfos { set; get; }
     }
     public class ClearanceInfo
     {

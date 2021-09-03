@@ -1,0 +1,36 @@
+﻿@page "/Admin/editUser/{Username}"
+@inject HttpClient http
+@inject NavigationManager uriHelper
+@inject IJSRuntime js
+@inject YamcsClient client;
+@layout AdminLayout
+<h3>Edit</h3>
+
+<Form ButtonText="Update" user="@Userinfo"
+      OnValidSubmit="@EditUser1" />
+
+@code {
+    [Parameter] public string Username { get; set; }
+    UserInfo Userinfo = new UserInfo();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        // fail = await http.GetFromJsonAsync<Failures>($"api/Failures/{FailureId}");
+        Userinfo = await client.getUser(Username);
+
+    }
+
+    async Task EditUser1()
+    {
+
+        //await http.PutAsJsonAsync("api/Failures", fail);
+        EditUserRequest req = new EditUserRequest(Userinfo.name, Userinfo.email, Userinfo.active, Userinfo.superuser);
+        var resp = await client.editUser(Username, req);
+        if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+        }
+        uriHelper.NavigateTo("/admin/accesscontrol/users");
+
+    }
+}

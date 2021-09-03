@@ -1,0 +1,18 @@
+﻿@page "/Admin/createUser"
+@inject HttpClient http
+@inject NavigationManager uriHelper
+@inject YamcsClient client
+@layout AdminLayout
+<h3>Create New User</h3>
+
+<Form ButtonText="Create User" user="@User"
+      OnValidSubmit="@createUser" />
+
+@code
+{ UserInfo User = new UserInfo();
+            async Task createUser()
+            {
+                CreateUserRequest req = new CreateUserRequest(User.name, User.displayName, User.email);
+                await client.createUser(req);
+                uriHelper.NavigateTo("/admin/accesscontrol/users");
+            } }

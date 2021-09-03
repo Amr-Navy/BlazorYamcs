@@ -1,7 +1,7 @@
 ﻿@page "/"
 @inject YamcsClient client
-
-
+@inject InstantState Instance
+@implements IDisposable
 
 
 <div class="row">
@@ -41,10 +41,10 @@ else
             {
                 <tr>
                     <td> </td>
-                    <td>@instance.name</td>
-                    <td>@instance.processors[0].name</td>
+                    <td>@instance.Name</td>
+                    <td>@instance.Processors[0].name</td>
                     <td></td>
-                    <td>@instance.template</td>
+                    <td>@instance.Template</td>
                 </tr>
             }
         </tbody>
@@ -53,7 +53,7 @@ else
 
 @code {
     private ListIntancesResponse Instances;
-    private IEnumerable<Instance> filteredInstances => Instances.instances.ToList().Where(x => x.name == Filter);
+    private IEnumerable<Instance> filteredInstances => Instances.Instances.ToList().Where(x => x.Name == Filter);
     string Filter = "";
 
     protected override async Task OnParametersSetAsync()
@@ -61,7 +61,8 @@ else
         try
         {
             Instances = await client.getInstances();
-            Console.WriteLine(Instances.instances[0].state);
+            Console.WriteLine(Instances.Instances[0].State);
+            Instance.SetInstance(Instances.Instances[0].Name);
         }
         catch (Exception ex)
         {
@@ -73,6 +74,7 @@ else
     {
         try
         {
+            Instance.OnChange += StateHasChanged;
             //  Instances = await client.getInstances();
             //  Console.WriteLine(Instances.instances[0].state);
         }
@@ -87,7 +89,7 @@ else
     {
         try
         {
-            await client.startInstance(Instances.instances[0].name);
+            await client.startInstance(Instances.Instances[0].Name);
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
@@ -100,7 +102,7 @@ else
     {
         try
         {
-            await client.stopInstance(Instances.instances[0].name);
+            await client.stopInstance(Instances.Instances[0].Name);
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
@@ -113,7 +115,7 @@ else
     {
         try
         {
-            await client.restartInstance(Instances.instances[0].name);
+            await client.restartInstance(Instances.Instances[0].Name);
             await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
@@ -121,5 +123,9 @@ else
 
             Console.WriteLine(ex.Message);
         }
+    }
+    public void Dispose()
+    {
+        Instance.OnChange -= StateHasChanged;
     }
 }

@@ -1,16 +1,20 @@
 ﻿@page "/missiondb/containers"
-@inject HttpClient Http
-
+@inject YamcsClient client
+@inject InstantState Instance
+@implements IDisposable
 <h1>Containers</h1>
 
 
 
-@if (forecasts == null)
+@if (conatinerpages == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
+    <Pagination TotaPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+                SelectedPage="SelectedPage"></Pagination>
     <table class="table">
         <thead>
             <tr>
@@ -22,27 +26,69 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts.name)
+            @foreach (var conatiner in conatinerpages.Containers)
             {
                 <tr>
-                    <td>@forecast</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                    <td>@conatiner.QualifiedName</td>
+                    <td>@conatiner.MaxInterval</td>
+                    <td>@conatiner.sizeInBits</td>
+                    @if (conatiner.BaseContainer != null)
+                    {
+                        <td>@conatiner.BaseContainer.Name</td>
 
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    @if (conatiner.RestrictionCriteria != null)
+                    {
+                        @foreach (var item in conatiner.RestrictionCriteria)
+                        {
+                        <tr>
+                            <td>@item.Parameter.Name == @item.Value</td>
+                        </tr>
+
+                    }
+
+
+                    }
+                    else
+                    {
+                    <td></td>
+                }
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+<Index />
 @code {
-    private PacketNameResponse forecasts;
+    private ContainersPage conatinerpages;
+    private int totalPageQuantity;
+    private int currentPage = 1;
 
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadContainer(page);
+    }
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+        Instance.OnChange += StateHasChanged;
+        Console.WriteLine("state {0}", Instance.Instance);
+        await LoadContainer();
     }
 
-    public class PacketNameResponse
-    { 
-    public string[] name { get; set; }
-
+    async Task LoadContainer(int pagee = 1, int quantityperpage = 100)
+    {
+        conatinerpages = await client.getContainers(Instance.Instance, pagee, quantityperpage);
+        totalPageQuantity = conatinerpages.TotalSize;
     }
+    public void Dispose()
+    {
+        Instance.OnChange -= StateHasChanged;
+    }
+
 }

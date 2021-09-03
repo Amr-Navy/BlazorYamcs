@@ -1,13 +1,14 @@
 ﻿@page "/links"
-@inject HttpClient Http
+@inject YamcsClient client
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+@if (LinkResponse == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
@@ -22,10 +23,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts.name)
+            @foreach (var link in LinkResponse.Links)
             {
                 <tr>
-                    <td>@forecast</td>
+                    <td></td>
+                    <td>@link.Name</td>
+                    <td>@link.DataInCount</td>
+                    <td>@link.DataOutCount</td>
+                    
                 </tr>
             }
         </tbody>
@@ -33,16 +38,12 @@ else
 }
 
 @code {
-    private PacketNameResponse forecasts;
+    private ListLinksResponse LinkResponse;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+        LinkResponse = await client.getLinks("simulator");
     }
 
-    public class PacketNameResponse
-    { 
-    public string[] name { get; set; }
-
-    }
+   
 }

@@ -1,18 +1,20 @@
 ﻿@page "/missiondb/parameters"
-@inject HttpClient Http
+@inject YamcsClient client
+
 
 <h1>Parameters</h1>
 
-<div>
 
-</div>
-
-@if (forecasts == null)
+@if (parameters == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
+    <Pagination TotaPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+                SelectedPage="SelectedPage"></Pagination>
+
     <table class="table">
         <thead>
             <tr>
@@ -23,10 +25,24 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts.name)
+            @foreach (var parameter in parameters.Parameters)
             {
                 <tr>
-                    <td>@forecast</td>
+                    <td>@parameter.Name</td>
+                    @if (parameter.Type != null)
+                    {
+                        <td>@parameter.Type.EngType</td>
+                        @if (parameter.Type.UnitSet != null)
+                        {
+                            <td>@parameter.Type.UnitSet[0].Unit</td>
+
+                        }
+                        else
+                        {
+                            <td> </td>
+                        }
+                    }
+                    <td>@parameter.Datasource</td>
                 </tr>
             }
         </tbody>
@@ -34,16 +50,24 @@ else
 }
 
 @code {
-    private PacketNameResponse forecasts;
-
+    private ParametersPage parameters;
+    private int totalPageQuantity;
+    private int currentPage = 1;
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadParameters(page);
+    }
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+
+        await LoadParameters();
     }
 
-    public class PacketNameResponse
-    { 
-    public string[] name { get; set; }
-
+    async Task LoadParameters(int pagee = 1, int quantityperpage = 100)
+    {
+        parameters = await client.getParameters("simulator", pagee, quantityperpage);
+        totalPageQuantity = parameters.TotalSize;
     }
+
 }

@@ -8,57 +8,57 @@ namespace Yamcs.Shared.Models
 {
     public class CreateTimelineItemRequest
     {
-        public string name { set; get; }
-        public string start { set; get; }
-        public string duration { set; get; }
+        public string Name { set; get; }
+        public string Start { set; get; }
+        public string Duration { set; get; }
         public TimelineItemType type { set; get; }
-        public string[] tags { set; get; }
+        public string[] Tags { set; get; }
     }
 
     public class UpdateTimelineItemRequest
     {
-        public string name { set; get; }
-        public string start { set; get; }
-        public string duration { set; get; }
-        public string[] tags { set; get; }
+        public string Name { set; get; }
+        public string Start { set; get; }
+        public string Duration { set; get; }
+        public string[] Tags { set; get; }
     }
 
     public enum TimelineItemType { EVENT, MANUAL_ACTIVITY, AUTO_ACTIVITY }
 
     public class TimelineItem
     {
-        public string id { set; get; }
-        public string name { set; get; }
-        public string start { set; get; }
-        public string duration { set; get; }
-        TimelineItemType type { set; get; }
+        public string Id { set; get; }
+        public string Name { set; get; }
+        public string Start { set; get; }
+        public string Duration { set; get; }
+        TimelineItemType Type { set; get; }
     }
 
     public class TimelineViewsPage
     {
-        TimelineView[] views { set; get; }
+        TimelineView[] Views { set; get; }
     }
 
     public class TimelineBandsPage
     {
-        TimelineBand[] bands { set; get; }
+        TimelineBand[] Bands { set; get; }
     }
 
     public class TimelineTagsPage
     {
-        string[] tags { set; get; }
+        string[] Tags { set; get; }
     }
 
     public class TimelineItemsPage
     {
-        TimelineItem[] items { set; get; }
+        TimelineItem[] Items { set; get; }
     }
 
     public class GetTimelineItemsOptions
     {
-        public string start { set; get; }
-        public string stop { set; get; }
-        public string band { set; get; }
+        public string Start { set; get; }
+        public string Stop { set; get; }
+        public string Band { set; get; }
     }
 
     public enum TimelineBandType { TIME_RULER, ITEM_BAND, SPACER }
@@ -66,31 +66,31 @@ namespace Yamcs.Shared.Models
     public class CreateTimelineBandRequest
     {
         public string name { set; get; }
-        public string description { set; get; }
-        public TimelineBandType type { set; get; }
-        public bool shared { set; get; }
-        public string[] tags { set; get; }
+        public string Description { set; get; }
+        public TimelineBandType Type { set; get; }
+        public bool Shared { set; get; }
+        public string[] Tags { set; get; }
         //  properties?: { [key: string]: string; };
     }
 
     public class TimelineBand
     {
-        public string id { set; get; }
-        public TimelineBandType type { set; get; }
-        public bool shared { set; get; }
-        public string name { set; get; }
-        public string description { set; get; }
-        public string[] tags { set; get; }
+        public string Id { set; get; }
+        public TimelineBandType Type { set; get; }
+        public bool Shared { set; get; }
+        public string Name { set; get; }
+        public string Description { set; get; }
+        public string[] Tags { set; get; }
         // properties?: { [key: string]: string; };
-        public string username { set; get; }
+        public string Username { set; get; }
     }
 
     public class UpdateTimelineBandRequest
     {
-        public string name { set; get; }
-        public string description { set; get; }
-        public bool shared { set; get; }
-        public string[] tags { set; get; }
+        public string Name { set; get; }
+        public string Description { set; get; }
+        public bool Shared { set; get; }
+        public string[] Tags { set; get; }
         // properties?: { [key: string]: string; };
     }
 

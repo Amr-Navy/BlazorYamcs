@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
     public class ListLinksResponse
     {
-        public Link[] links { set; get; }
+        public Link[] Links { set; get; }
     }
     public class Link
     {
-        public string  Instance { get; set; }
+        public string Instance { get; set; }
         public string Name { get; set; }
         public string Type { set; get; }
-        public string  Spec { get; set; }
+        public string Spec { get; set; }
         public bool Disables { set; get; }
         public string Status { get; set; }
-        public  string  DataInCount { set; get; }
+        public string DataInCount { set; get; }
         public string DataOutCount { set; get; }
         public string DetailedStatus { set; get; }
         public string ParentName { get; set; }
@@ -34,15 +28,15 @@ namespace Yamcs.Shared.Models
     }
     public class EditLinkOptions
     {
-        public EditLinkOptions(linkstate state, bool resetCounters)
+        public EditLinkOptions(Linkstate state, bool resetCounters)
         {
-            this.state = state;
-            this.resetCounters = resetCounters;
+            this.State = state;
+            this.ResetCounters = resetCounters;
         }
 
-        public  linkstate  state {set;get;}
-       public bool resetCounters { set; get; }
-}
-public enum linkstate {enabled,disabled}
-    public enum LinkStatus {OK,UNAVAIL,DISABLED,FAILED}
+        public Linkstate State { set; get; }
+        public bool ResetCounters { set; get; }
+    }
+    public enum Linkstate { enabled, disabled }
+    public enum LinkStatus { OK, UNAVAIL, DISABLED, FAILED }
 }

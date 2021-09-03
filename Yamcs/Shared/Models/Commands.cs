@@ -1,38 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
     public class SubscribeQueueStatisticsRequest
     {
-       public string  instance { set; get; }
-        public string processor { set; get; }
+        public string Instance { set; get; }
+        public string Processor { set; get; }
     }
 
     public class SubscribeQueueEventsRequest
     {
-        public string instance { set; get; }
-        public string processor { set; get; }
+        public string Instance { set; get; }
+        public string Processor { set; get; }
     }
 
     public class CommandQueueEntry
     {
-        public string instance { set; get; }
-        public string processorName { set; get; }
-        public string queueName { set; get; }
-        public string id { set; get; }
-        public string commandName { set; get; }
-        public string origin { set; get; }
-        public int sequenceNumber { set; get; }
-        public string source { set; get; }
-        public string binary { set; get; }
-        public string username { set; get; }
-        public string generationTime { set; get; }
-        public string uuid { set; get; }
-        public bool pendingTransmissionConstraints { set; get; }
+        public string Instance { set; get; }
+        public string ProcessorName { set; get; }
+        public string QueueName { set; get; }
+        public string Id { set; get; }
+        public string CommandName { set; get; }
+        public string Origin { set; get; }
+        public int SequenceNumber { set; get; }
+        public string Source { set; get; }
+        public string Binary { set; get; }
+        public string Username { set; get; }
+        public string GenerationTime { set; get; }
+        public string Uuid { set; get; }
+        public bool PendingTransmissionConstraints { set; get; }
     }
     public class ListCommandQueuesRespnse
     {
@@ -40,40 +34,40 @@ namespace Yamcs.Shared.Models
     }
     public class CommandQueue
     {
-        public string instance { set; get; }
-        public string processorName { set; get; }
-        public string name { set; get; }
-      //  state: 'BLOCKED' | 'DISABLED' | 'ENABLED';
-        public string[] users { set; get; }
-        public string[] groups { set; get; }
-        public string minLevel { set; get; }
-        public int nbSentCommands { set; get; }
-        public int  nbRejectCommands { set; get; }
-        public int stateExpirationTimeS { set; get; }
-        public CommandQueueEntry[]  entry { set; get; }
- public int order { set; get; }
-}
+        public string Instance { set; get; }
+        public string ProcessorName { set; get; }
+        public string Name { set; get; }
+        //  state: 'BLOCKED' | 'DISABLED' | 'ENABLED';
+        public string[] Users { set; get; }
+        public string[] Groups { set; get; }
+        public string MinLevel { set; get; }
+        public int NbSentCommands { set; get; }
+        public int NbRejectCommands { set; get; }
+        public int StateExpirationTimeS { set; get; }
+        public CommandQueueEntry[] Entry { set; get; }
+        public int Order { set; get; }
+    }
 
     public class CommandQueueEvent
     {
-      //  type: 'COMMAND_ADDED' | 'COMMAND_UPDATED' | 'COMMAND_REJECTED' | 'COMMAND_SENT';
-        public CommandQueueEntry data { set; get; }
-     }
+        //  type: 'COMMAND_ADDED' | 'COMMAND_UPDATED' | 'COMMAND_REJECTED' | 'COMMAND_SENT';
+        public CommandQueueEntry Data { set; get; }
+    }
 
     public class EditCommandQueueOptions
     {
-     //   state: 'enabled' | 'disabled' | 'blocked';
-     }
+        //   state: 'enabled' | 'disabled' | 'blocked';
+    }
 
     public class EditCommandQueueEntryOptions
     {
-       // state: 'released' | 'rejected';
+        // state: 'released' | 'rejected';
     }
-    
+
     public class SubscribeCommandsRequest
     {
-       public string instance { set; get; }
-       public string processor { set; get; }
-       public bool ignorePastCommands { set; get; }
+        public string Instance { set; get; }
+        public string Processor { set; get; }
+        public bool IgnorePastCommands { set; get; }
     }
 }

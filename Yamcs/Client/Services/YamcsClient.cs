@@ -10,6 +10,9 @@ using System.Net.Http.Json;
 using Yamcs.Shared.Models;
 using System.Xml.Linq;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Text;
+using MudBlazor;
 
 namespace Yamcs.Client.Services
 {
@@ -65,9 +68,9 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ListClearancesResponse>("/api/clearances");
         }
-        public async Task<LeapSecondsTable> getLeapSeconds()
+        public async Task<LeapSecondsTableResponse> getLeapSeconds()
         {
-            return await http.GetFromJsonAsync<LeapSecondsTable>("/api/leap-seconds");
+            return await http.GetFromJsonAsync<LeapSecondsTableResponse>("/api/leap-seconds");
         }
         public async Task<ListIntancesResponse> getInstances() { 
         
@@ -93,10 +96,10 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<DatabaseInfo>($"/api/databases/{name}");
         }
-        //public async Task<> getService(string instance)
-        //{
-        //    return await http.GetFromJsonAsync<>($"/api/services/{instance}");
-        //}
+        public async Task<ListServicesResponse> getService(string instance)
+        {
+            return await http.GetFromJsonAsync<ListServicesResponse>($"/api/services/{instance}");
+        }
         public async Task<ListServiceAccountsResponse> getServiceAccounts()
         {
             return await http.GetFromJsonAsync<ListServiceAccountsResponse>("/api/service-accounts");
@@ -129,14 +132,18 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<RoleInfo>($"/api/roles/{name}");
         }
-        public async Task<ListClientResponse> getClientConnections()
+        public async Task<ListClientConnectionInfo> getClientConnections()
         {
-            return await http.GetFromJsonAsync<ListClientResponse>("/api/connections");
+   
+
+           return  await http.GetFromJsonAsync<ListClientConnectionInfo>("/api/connections");
+                
+       
         }
-        //public async Task<> getRocksDbDatabaseProperties()
-        //{
-        //    return await http.GetFromJsonAsync<>("/api/sysinfo");
-        //}
+        public async Task<ListRocksdbResponse> getRocksDbDatabaseProperties()
+        {
+            return await http.GetFromJsonAsync<ListRocksdbResponse>("/api/archive/rocksdb/databases");
+        }
         public async Task<ListPacketsResponse> getPackets(string instance)
         {
             return await http.GetFromJsonAsync<ListPacketsResponse>($"/api/archive/{instance}/packets");
@@ -145,9 +152,9 @@ namespace Yamcs.Client.Services
         {
             return await http.GetFromJsonAsync<ListEventsResponse>($"/api/archive/{instance}/events/sources");
         }
-        public async Task<SystemInfoResponse> getMissionDatabase(string instance)
+        public async Task<MissionDatabase> getMissionDatabase(string instance)
         {
-            return await http.GetFromJsonAsync<SystemInfoResponse>("/api/sysinfo");
+            return await http.GetFromJsonAsync<MissionDatabase>($"/api/mdb/{instance}");
         }
         public async Task<ListLinksResponse> getLinks(string instance)
         {
@@ -187,15 +194,15 @@ namespace Yamcs.Client.Services
         }
         public async Task<StreamData> getStreams(string instance)
         {
-            return await http.GetFromJsonAsync<StreamData>($"/api/archive/${instance}/streams");
+            return await http.GetFromJsonAsync<StreamData>($"/api/archive/{instance}/streams");
         }
         public async Task<ListTableRespnse> getTables(string instance)
         {
-            return await http.GetFromJsonAsync<ListTableRespnse>($"/api/archive/${instance}/tables");
+            return await http.GetFromJsonAsync<ListTableRespnse>($"/api/archive/{instance}/tables");
         }
         public async Task<Table> getTable(string instance,string name)
 {
-            return await http.GetFromJsonAsync<Table>($"/api/archive/${instance}/tables/${name}");
+            return await http.GetFromJsonAsync<Table>($"/api/archive/{instance}/tables/{name}");
         }
         //public async Task<> getTableData(string instance,string name)
         //{
@@ -203,7 +210,7 @@ namespace Yamcs.Client.Services
         //}
         public async Task<PacketNameResponse> getPacketNames(string instance)
         {
-            return await http.GetFromJsonAsync<PacketNameResponse>($"/api//archive/${instance}/packet-names");
+            return await http.GetFromJsonAsync<PacketNameResponse>($"/api//archive/{instance}/packet-names");
         }
         //public async Task<> getPacketIndex(string instance)
         //{
@@ -223,15 +230,15 @@ namespace Yamcs.Client.Services
         //}
         public async Task<SpaceSystemsPage> getRootSpaceSystems(string instance)
         {
-            return await http.GetFromJsonAsync<SpaceSystemsPage>($"/api/mdb/${instance}");
+            return await http.GetFromJsonAsync<SpaceSystemsPage>($"/api/mdb/{instance}");
         }
         public async Task<SpaceSystem> getSpaceSystem(string instance,string qualifiedname)
         {
-            return await http.GetFromJsonAsync<SpaceSystem>($"/api/mdb/${instance}/space-systems${qualifiedname}");
+            return await http.GetFromJsonAsync<SpaceSystem>($"/api/mdb/{instance}/space-systems{qualifiedname}");
         }
-        public async Task<ParametersPage> getParameters(string instance)
+        public async Task<ParametersPage> getParameters(string instance,int pagee,int quantityperpage)
         {
-            return await http.GetFromJsonAsync<ParametersPage>($"/api/mdb/${instance}/parameters");
+            return await http.GetFromJsonAsync<ParametersPage>($"/api/mdb/{instance}/parameters?pos={pagee}&limit={quantityperpage}");
         }
         public async Task<Parameter> getParameter(string instance, string qualifiedName)
         {
@@ -239,11 +246,11 @@ namespace Yamcs.Client.Services
         }
         public async Task<Parameter> getParameterById(string instance, NamedObjectId id)
         {
-            return await http.GetFromJsonAsync<Parameter>($"/api/mdb/${instance}/parameters");
+            return await http.GetFromJsonAsync<Parameter>($"/api/mdb/{instance}/parameters");
         }
         public async Task<Parameter> getParameterValues(string instance,string QualifiedName)
         {
-            return await http.GetFromJsonAsync<Parameter>($"/api/archive/${instance}/parameters${QualifiedName}");
+            return await http.GetFromJsonAsync<Parameter>($"/api/archive/{instance}/parameters{QualifiedName}");
         }
         //public async Task<> getParameterSamples(string instance, string qualifiedName)
         //{
@@ -253,41 +260,41 @@ namespace Yamcs.Client.Services
         //{
         //    return await http.GetFromJsonAsync<>($"/api/archive/${instance}/parameters${QualifiedName}/ranges");
         //}
-        //public async Task<CommandsPage> getCommands(string instance)
-        //{
-        //    return await http.GetFromJsonAsync<CommandsPage>($"/api/mdb/${instance}/commands");
-        //}
+        public async Task<CommandsPage> getCommands(string instance,int pagee,int quantityperpage)
+        {
+            return await http.GetFromJsonAsync<CommandsPage>($"/api/mdb/{instance}/commands?pos={pagee}&limit={quantityperpage}");
+        }
         public async Task<Command> getCommand(string instance,string qualifiedName)
         {
-            return await http.GetFromJsonAsync<Command>($"/api/mdb/${instance}/commands${qualifiedName}");
+            return await http.GetFromJsonAsync<Command>($"/api/mdb/{instance}/commands{qualifiedName}");
         }
-        public async Task<ContainersPage> getContainers(string instance)
-        {
-            return await http.GetFromJsonAsync<ContainersPage>($"/api/mdb/${instance}/containers");
+        public async Task<ContainersPage> getContainers(string instance,int pagee,int quantityperpage)
+{
+            return await http.GetFromJsonAsync<ContainersPage>($"/api/mdb/{instance}/containers?pos={pagee}&limit={quantityperpage}");
         }
         public async Task<Container> getContainer(string instance, string qualifiedName)
         {
-            return await http.GetFromJsonAsync<Container>($"/api/mdb/${instance}/containers${qualifiedName}");
+            return await http.GetFromJsonAsync<Container>($"/api/mdb/{instance}/containers{qualifiedName}");
         }
         public async Task<ListTagsResponsecs> getTags(string instance)
         {
-            return await http.GetFromJsonAsync<ListTagsResponsecs>($"/api/archive/${instance}/tags");
+            return await http.GetFromJsonAsync<ListTagsResponsecs>($"/api/archive/{instance}/tags");
         }
         public async Task<AlgorithmsPage> getAlgorithms(string instance)
         {
-            return await http.GetFromJsonAsync<AlgorithmsPage>("/api/mdb/${instance}/algorithms");
+            return await http.GetFromJsonAsync<AlgorithmsPage>($"/api/mdb/{instance}/algorithms");
         }
         public async Task<Algorithm> getAlgorithm(string instance,string qualifiedName)
         {
-            return await http.GetFromJsonAsync<Algorithm>($"/api/mdb/${instance}/algorithms${qualifiedName}");
+            return await http.GetFromJsonAsync<Algorithm>($"/api/mdb/{instance}/algorithms{qualifiedName}");
         }
         public async Task<ServicesPage> getFileTransferServices(string instance)
         {
-            return await http.GetFromJsonAsync<ServicesPage>($"/api/filetransfer/${instance}/services");
+            return await http.GetFromJsonAsync<ServicesPage>($"/api/filetransfer/{instance}/services");
         }
         public async Task<TransfersPage> getFileTransfers(string instance,string service)
         {
-            return await http.GetFromJsonAsync<TransfersPage>($"/api/filetransfer/${instance}/${service}/transfers");
+            return await http.GetFromJsonAsync<TransfersPage>($"/api/filetransfer/{instance}/{service}/transfers");
         }
       
         //public async Task<ListGapsResponse> getGaps(string instance)
@@ -298,137 +305,153 @@ namespace Yamcs.Client.Services
         #endregion create 
 
         #region Post
-        public async Task createProcessor(Processor p)
+        public async Task<HttpResponseMessage> createProcessor(Processor p)
         {
-             await http.PostAsJsonAsync($"/api/processors",p);
+            return await http.PostAsJsonAsync($"/api/processors",p);
         }
-        public async Task stopInstance(string name)
+        public async Task<HttpResponseMessage> stopInstance(string name)
         {
-            await http.PostAsync($"/api/instances/{name}:stop",null);
+            return await http.PostAsync($"/api/instances/{name}:stop",null);
         }
-        public async Task startInstance(string name)
+        public async Task<HttpResponseMessage> startInstance(string name)
         {
-            await http.PostAsync($"/api/instances/{name}:start",null);
+            return await http.PostAsync($"/api/instances/{name}:start",null);
         }
-        public async Task restartInstance(string name)
+        public async Task<HttpResponseMessage> restartInstance(string name)
         {
-            await http.PostAsync($"/api/instances/{name}:restart",null);
+            return await http.PostAsync($"/api/instances/{name}:restart",null);
         }
-        public async Task startService(string instance,string name)
+        public async Task<HttpResponseMessage> startService(string instance,string name)
         {
-            await http.PostAsync($"/api/services/{instance}/{name}:start",null);
+            return await http.PostAsync($"/api/services/{instance}/{name}:start",null);
         }
-        public async Task stopService(string instance, string name)
+        public async Task<HttpResponseMessage> stopService(string instance, string name)
         {
-            await http.PostAsync($"/api/services/{instance}/{name}:stop",null);
+            return await http.PostAsync($"/api/services/{instance}/{name}:stop",null);
         }
-        public async Task createServiceAccount(CreateServiceAccountRequest account)
+        public async Task<HttpResponseMessage> createServiceAccount(CreateServiceAccountRequest account)
         {
-            await http.PostAsJsonAsync($"/api/service-accounts",account);
+            return await http.PostAsJsonAsync($"/api/service-accounts",account);
         }
-        public async Task createUser(CreateUserRequest user)
+        public async Task<HttpResponseMessage> createUser(CreateUserRequest user)
         {
-            await http.PostAsJsonAsync($"/api/users/",user);
+            return await http.PostAsJsonAsync($"/api/users/",user);
         }
-        public async Task createGroup(CreateGroupRequest group)
+        public async Task<HttpResponseMessage> createGroup(CreateGroupRequest group)
         {
-            await http.PostAsJsonAsync($"/api/groups",group);
+            return await http.PostAsJsonAsync($"/api/groups",group);
         }
         //public async Task createInstance(CreateInstanceRequest options)
         //{
         //    await http.PostAsJsonAsync($"/api/instances",options);
         //}
-        public async Task createEvent(string instance, CreateEventRequest options)
+        public async Task<HttpResponseMessage> createEvent(string instance, CreateEventRequest options)
         {
-            await http.PostAsJsonAsync($"/api/archive/{instance}/events",options);
+            return await http.PostAsJsonAsync($"/api/archive/{instance}/events",options);
         }
-        public async Task issueCommand(string instance, string processorName, string qualifiedName)
+        public async Task<HttpResponseMessage> issueCommand(string instance, string processorName, string qualifiedName)
         {
-            await http.PostAsync($"/api/processors/{instance}/{processorName}/commands{qualifiedName}",null);
+            return await http.PostAsync($"/api/processors/{instance}/{processorName}/commands{qualifiedName}",null);
         }
 
 
         #endregion
         #region Patch
-        public async Task changeClearance(string username, EditClearanceRequest options)
+        public async Task<HttpResponseMessage> changeClearance(string username, EditClearanceRequest options)
         {
-            await http.PutAsJsonAsync($"/api/clearances/{username}", options);
-            
+            var content = new StringContent(JsonConvert.SerializeObject(options), Encoding.UTF8, "application/json");
+            return await http.PatchAsync($"/api/clearances/{username}", content);
+
         }
-        public async Task editUser(string username, EditUserRequest options)
+        public async Task<HttpResponseMessage> editUser(string username, EditUserRequest options)
         {
-            await http.PutAsJsonAsync($"/api/users/{username}", options);
+            var content = new StringContent(JsonConvert.SerializeObject(options), Encoding.UTF8, "application/json");
+            return  await http.PatchAsync($"/api/users/{username}", content);
+         
         }
         //public async Task editGroup(string username, EditGroupRequest options)
         //{
         //    await http.PutAsJsonAsync($"/api/groups/{username}", options);
         //}
-        public async Task editLink(string instance,string name, EditLinkOptions options)
+        public async Task<HttpResponseMessage> editLink(string instance,string name, EditLinkOptions options)
         {
-            await http.PutAsJsonAsync($"/api/links/${instance}/${name}", options);
+            return await http.PutAsJsonAsync($"/api/links/{instance}/{name}", options);
         }
-        public async Task enableLink(string instance, string name)
+        public async Task<HttpResponseMessage> enableLink(string instance, string name)
         {
-            EditLinkOptions op = new EditLinkOptions(linkstate.enabled,true);
-            await editLink(instance,name,op);
+            EditLinkOptions op = new EditLinkOptions(Linkstate.enabled,true);
+            return await editLink(instance,name,op);
         }
         public async Task disableLink(string instance, string name)
         {
-            EditLinkOptions op = new EditLinkOptions(linkstate.disabled,false);
+            EditLinkOptions op = new EditLinkOptions(Linkstate.disabled,false);
             await editLink(instance,name,op);
         }
 
-        public async Task editCommandQueue(string instance, string processorName, string queueName, EditCommandQueueOptions option)
+        public async Task<HttpResponseMessage> editCommandQueue(string instance, string processorName, string queueName, EditCommandQueueOptions option)
         {
-            await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}",option);
+            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}",option);
         }
-        public async Task editCommandQueueEntry(string instance, string processorName, string queueName,string uuid, EditCommandQueueEntryOptions option)
+        public async Task<HttpResponseMessage> editCommandQueueEntry(string instance, string processorName, string queueName,string uuid, EditCommandQueueEntryOptions option)
         {
-            await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}/entries/{uuid}", option);
+            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/queues/{queueName}/entries/{uuid}", option);
         }
         //public async Task editAlarm(string instance, string processor, string alarm, string sequenceNumber, EditAlarmOptions opt)
         //{
         //    await http.PutAsJsonAsync($"/api/processors/{instance}/{processor}/alarms{alarm}/{sequenceNumber}",opt);
         //}
-        public async Task setParameterValue(string instance, string processorName, string qualifiedName,Value val)
+        public async Task<HttpResponseMessage> setParameterValue(string instance, string processorName, string qualifiedName,Value val)
         {
-            await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/parameters{qualifiedName}",val);
+            return await http.PutAsJsonAsync($"/api/processors/{instance}/{processorName}/parameters{qualifiedName}",val);
         }
         #endregion
 
         #region Delete
-        public async Task deleteClearance(string username)
+        public async Task<HttpResponseMessage> deleteClearance(string username)
         {
-             await http.DeleteAsync($"/api/clearances/${username}");
+            return await http.DeleteAsync($"/api/clearances/{username}");
         }
-        public async Task deleteServiceAccount(string name)
+        public async Task<HttpResponseMessage> deleteUser(string username)
         {
-            await http.DeleteAsync($"/api/service-accounts/${name}");
+            return await http.DeleteAsync($"/api/users/{username}");
         }
-        public async Task deleteIdentity(string name,string provider)
+        public async Task<HttpResponseMessage> deleteServiceAccount(string name)
         {
-            await http.DeleteAsync($"/api/service-accounts/${name}");
+            return await http.DeleteAsync($"/api/service-accounts/{name}");
         }
-        public async Task deleteGroup(string name)
+        public async Task<HttpResponseMessage> deleteIdentity(string name,string provider)
         {
-            await http.DeleteAsync($"/api/groups/${name}");
+            return await http.DeleteAsync($"/api/service-accounts/{name}");
         }
-        public async Task deleteReplayProcessor(string instance,string processor)
+        public async Task<HttpResponseMessage> deleteGroup(string name)
+        {
+            return await http.DeleteAsync($"/api/groups/{name}");
+        }
+        public async Task<HttpResponseMessage> deleteReplayProcessor(string instance,string processor)
 {
-            await http.DeleteAsync($"/api/processors/${instance}/${processor}");
+            return await http.DeleteAsync($"/api/processors/{instance}/{processor}");
         }
-        public async Task closeClientConnection(string id)
+        public async Task<HttpResponseMessage> closeClientConnection(string id)
         {
-            await http.DeleteAsync($"/api/connections/{id}");
+            return await http.DeleteAsync($"/api/connections/{id}");
         }
         #endregion
         #region subscribtions
         public async Task CreateTMStatisticsSubscription(string _instance, string _processor)
         {
-            SubscribeTMStatisticsRequest Opt = new SubscribeTMStatisticsRequest(_instance, _processor);
-              await webclient.CreateSubscribtion("tmstats", 4, Opt);
-         
-            Console.WriteLine("sent subscribtion");
+            SubscribeTMStatisticsRequest subscribeTMStatistics = new SubscribeTMStatisticsRequest(_instance, _processor);
+            var req = new WebSocketRequest<SubscribeTMStatisticsRequest>();
+            req.Type = "tmstats";
+            req.Options = subscribeTMStatistics;
+            await webclient.Send<SubscribeTMStatisticsRequest>(req);
+        }
+        public async Task CreateTimeSubscription(string _instance, string _processor)
+        {
+            SubscribeTimeRequest subscribeTMStatistics = new (_instance, _processor);
+            var req = new WebSocketRequest<SubscribeTimeRequest>();
+            req.Type = "time";
+            req.Options = subscribeTMStatistics;
+            await webclient.Send<SubscribeTimeRequest>(req);
         }
         #endregion
     }

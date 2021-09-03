@@ -1,12 +1,17 @@
 ﻿@page "/admin/plugins"
 @layout AdminLayout
 @inject HttpClient Http
+@inject YamcsClient client;
 @using Yamcs.Shared
 
 <h1>Plugins</h1>
 
 
+@if (info == null)
+{
+    <p><em>Loading Plugin Information...</em></p>
 
+}
 
 else
 {
@@ -21,7 +26,15 @@ else
 
         </thead>
         <tbody>
-        
+            @foreach (var plugin in info.Plugins)
+            {
+               <tr>
+                   <td>@plugin.Name</td>
+                   <td>@plugin.description</td>
+                   <td>@plugin.Version</td>
+                   <td>@plugin.Vendor</td>
+               </tr>
+            }
 
 
         </tbody>
@@ -29,7 +42,10 @@ else
 }
 
 @code {
-
-
+    GeneralInfo info;
+    protected override async Task OnInitializedAsync()
+    {
+        info = await client.getGeneralInfo();
+    }
 
 }

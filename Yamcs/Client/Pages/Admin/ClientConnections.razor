@@ -1,27 +1,71 @@
 ﻿@page "/admin/clientconnections"
 @layout AdminLayout
-@inject HttpClient Http
+@inject YamcsClient client
 @using Yamcs.Shared
+@inject NavigationManager uriHelper
+<h1>Client Connections</h1>
 
-<h1>Admin Home</h1>
+@if (clientconnectioninfo == null)
+{
 
+    <div class="spinner"></div>
 
+}
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
+                <th>Protocol</th>
+                <th>Remote Address</th>
+                <th>Read</th>
+                <th>Written</th>
+                <th>Rx</th>
+                <th>Tx</th>
+                <th>Request</th>
             </tr>
         </thead>
         <tbody>
-
+            @foreach (var connection in clientconnectioninfo.Connections)
+            {
+                <tr>
+                    <td>@connection.Id</td>
+                    <td>@connection.HttpRequest.Protocol</td>
+                    <td>@connection.RemoteAddress</td>
+                    <td>@connection.ReadBytes</td>
+                    <td>@connection.WrittenBytes</td>
+                    <td>@connection.ReadThroughput</td>
+                    <td>@connection.writeThroughput</td>
+                    <td>@connection.HttpRequest.Uri</td>
+                    <td><a href="" class="btn btn-danger" @onclick="@(()=>kill(connection.Id))">Kill Connection</a></td>
+                </tr>
+            }
         </tbody>
     </table>
 }
 
 @code {
+    ListClientConnectionInfo clientconnectioninfo;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+           
+            clientconnectioninfo = await client.getClientConnections();
 
+        }
+        catch (Exception ex)
+        {
 
+            Console.WriteLine(ex.Message);
+        }
+    }
+    private async Task kill(string ID)
+    {
+        await client.closeClientConnection(ID);
+        uriHelper.NavigateTo("/admin/clientconnections");
+    }
 }

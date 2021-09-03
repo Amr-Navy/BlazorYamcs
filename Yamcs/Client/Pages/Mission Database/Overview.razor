@@ -1,45 +1,61 @@
 ﻿@page "/missiondb/overview"
-@inject HttpClient Http
+@inject YamcsClient client
 
-<h1>OverView</h1>
+<h1>Mission Database</h1>
 
 
 
-@if (forecasts == null)
+@if (Mdbs == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Parameters</th>
-                <th>Count </th>
+                <th>Parameters: @Mdbs.ParameterCount</th>
+                
             </tr>
+            <tr>
+                <th>Containers: @Mdbs.containerCount</th>
+            </tr>
+            <tr>
+                <th>Commands: @Mdbs.CommandCount</th>
+            </tr>
+            <tr>
+                <th>Algorithms: @Mdbs.AlgorithmCount</th>
+            </tr>
+
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts.name)
-            {
-                <tr>
-                    <td>@forecast</td>
-                </tr>
-            }
+
+            @*<tr>
+                <th>Parameters:</th>
+                <td>@Mdbs.parameterCount</td>
+            </tr>
+            <tr>
+                <td>@Mdbs.containerCount</td>
+            </tr>
+            <tr>
+                <td>@Mdbs.commandCount</td>
+            </tr>
+            <tr>
+                <td>@Mdbs.algorithmCount</td>
+            </tr>*@
+
         </tbody>
     </table>
 }
 
 @code {
-    private PacketNameResponse forecasts;
+    private MissionDatabase  Mdbs;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+        Mdbs = await client.getMissionDatabase("simulator");
     }
 
-    public class PacketNameResponse
-    { 
-    public string[] name { get; set; }
 
-    }
 }

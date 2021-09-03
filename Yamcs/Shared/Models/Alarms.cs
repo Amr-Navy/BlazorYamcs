@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
+﻿using Newtonsoft.Json.Converters;
 using System.Reflection;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
 
 namespace Yamcs.Shared.Models
 {
     public class GlobalAlarmStatus
     {
-        public int unacknowledgedCount { set; get; }
-        public bool unacknowledgedActive { set; get; }
-        public int acknowledgedCount { set; get; }
-        public bool acknowledgedActive { set; get; }
-        public int shelvedCount { set; get; }
-        public bool shelvedActive { set; get; }
+        public int UnacknowledgedCount { set; get; }
+        public bool UnacknowledgedActive { set; get; }
+        public int AcknowledgedCount { set; get; }
+        public bool AcknowledgedActive { set; get; }
+        public int ShelvedCount { set; get; }
+        public bool ShelvedActive { set; get; }
     }
 
-    public class SubscribeGlobalAlarmStatusRequest
-    {
-        public string instance { set; get; }
-        public string processor { set; get; }
-    }
-
-    public class SubscribeAlarmsRequest
-    {
-        public string instance { set; get; }
-        public string processor { set; get; }
-
-       
-    }
+ 
     public class ListAlarmsResponse
     {
-        public AlarmData[] alarms { set; get; }
+        public AlarmData[] Alarms { set; get; }
     }
     // Summary of an alarm applicable for Parameter or Event (possibly
     // other in the future) alarms.
@@ -45,16 +29,16 @@ namespace Yamcs.Shared.Models
     public class AlarmData
     {
         // Distinguisher between multiple alarms for the same id
-        public int seqNum { set; get; }
-        public AlarmType type { set; get; }
-        public AlarmNotificationType notificationType { set; get; }
+        public int SeqNum { set; get; }
+        public AlarmType Type { set; get; }
+        public AlarmNotificationType NotificationType { set; get; }
         // For parameter alarms, this is the id of the parameters
         // For event alarms
         // - the id.namespace is /yamcs/event/<EVENT_SOURCE>, unless
         // EVENT_SOURCE starts with a "/" in which case the namespace
         // is just the <EVENT_SOURCE>
         // - the id.name is the <EVENT_TYPE>
-        public NamedObjectId id { set; get; }
+        public NamedObjectId Id { set; get; }
         
         public string triggerTime { set; get; } // RFC 3339
         // Number of times the object was in alarm state
@@ -103,18 +87,29 @@ namespace Yamcs.Shared.Models
 // may use this field to indicate the path within the parameter.
 public string[]  path { set; get; } 
 }
-    public class DataSourceType
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum DataSourceType
     {
-        public const string TELEMETERED = "TELEMETERED";
-        public const string DERIVED = "DERIVED";
-        public const string CONSTANT = "CONSTANT";
-        public const string LOCAL = "LOCAL";
-        public const string SYSTEM = "SYSTEM";
-        public const string COMMAND = "COMMAND";
-        public const string COMMAND_HISTORY = "COMMAND_HISTORY";
-        public const string EXTERNAL1 = "EXTERNAL1";
-        public const string EXTERNAL2 = "EXTERNAL2";
-        public const string EXTERNAL3 = "EXTERNAL3";
+        [EnumMember(Value = "TELEMETERED")]
+        TELEMETERED, 
+        [EnumMember(Value = "DERIVED")]
+        DERIVED ,
+        [EnumMember(Value = "CONSTANT")]
+        CONSTANT, 
+        [EnumMember(Value = "LOCAL")]
+        LOCAL,
+        [EnumMember(Value = "SYSTEM")]
+        SYSTEM,
+        [EnumMember(Value = "COMMAND")]
+        COMMAND, 
+        [EnumMember(Value = "COMMAND_HISTORY")]
+        COMMAND_HISTORY,
+        [EnumMember(Value = "EXTERNAL1")]
+        EXTERNAL1, 
+        [EnumMember(Value = "EXTERNAL2")]
+        EXTERNAL2, 
+        [EnumMember(Value = "EXTERNAL3")]
+        EXTERNAL3 
     }
     public class ParameterTypeInfo
     {
@@ -226,79 +221,79 @@ public string[]  path { set; get; }
 //}
     public class ParameterValue
     {
-        public NamedObjectId id { set; get; }
-        public Value rawValue { set; get; }
-        public Value engValue { set; get; }
-        public string acquisitionTime { set; get; } // RFC 3339
-        public string generationTime { set; get; }// RFC 3339
+        public NamedObjectId Id { set; get; }
+        public Value RawValue { set; get; }
+        public Value EngValue { set; get; }
+        public string AcquisitionTime { set; get; } // RFC 3339
+        public string GenerationTime { set; get; }// RFC 3339
         public AcquisitionStatus acquisitionStatus { set; get; }
         //this field has been originally created for compatibility with Airbus CGS/CD-
         //˓→MCS system
         //when it was set to false, then the acquisitionStatus was also set to INVALID;
         //it has been therefore removed from yamcs
-        public bool processingStatus { set; get; }
+        public bool ProcessingStatus { set; get; }
         public MonitoringResult monitoringResult { set; get; }
-        public RangeCondition rangeCondition { set; get; }
+        public RangeCondition RangeCondition { set; get; }
         // same as the Timestamps above
-        public string acquisitionTimeUTC { set; get; }
-        public string generationTimeUTC { set; get; }
+        public string AcquisitionTimeUTC { set; get; }
+        public string GenerationTimeUTC { set; get; }
         // Context-dependent ranges
-        public AlarmRange[] alarmRange { set; get; }
+        public AlarmRange[] AlarmRange { set; get; }
         // How long (in milliseconds) this parameter value is valid
         // Note that there is an option when subscribing to parameters to get
         // updated when the parameter values expire.
-        public string expireMillis { set; get; }
+        public string ExpireMillis { set; get; }
         // String decimal
         // When transferring parameters over WebSocket, this value might be used
         // instead of the id above in order to reduce the bandwidth.
         // Note that the id <-> numericId assignment is only valid in the context
         // of a single WebSocket connection.
 
-        public int numericId { set; get; }
+        public int NumericId { set; get; }
             }
 
   
     public class EventAlarmData
     {
-        public Evvent triggerEvent { set; get; }
-        public Evvent mostSevereEvent { set; get; }
-        public Evvent currentEvent { set; get; }
+        public Evvent TriggerEvent { set; get; }
+        public Evvent MostSevereEvent { set; get; }
+        public Evvent CurrentEvent { set; get; }
     }
 
     public class AcknowledgeInfo
     {
-        public string acknowledgedBy { set; get; }
-        public string acknowledgeMessage { set; get; }
-        public string acknowledgeTime { set; get; }
+        public string AcknowledgedBy { set; get; }
+        public string AcknowledgeMessage { set; get; }
+        public string AcknowledgeTime { set; get; }
     }
 
     public class ShelveInfo
     {
-        public string shelvedBy { set; get; }
-        public string shelveMessage { set; get; }
-        public string shelveTime { set; get; }
-        public string shelveExpiration { set; get; }
+        public string ShelvedBy { set; get; }
+        public string ShelveMessage { set; get; }
+        public string ShelveTime { set; get; }
+        public string ShelveExpiration { set; get; }
     }
 
     public class ClearInfo
     {
-        public string clearedBy { set; get; }
-        public string clearTime { set; get; }
-        public string clearMessage { set; get; }
+        public string ClearedBy { set; get; }
+        public string ClearTime { set; get; }
+        public string ClearMessage { set; get; }
     }
 
     public class GetAlarmsOptions
     {
-        public string start { set; get; }
-        public string stop { set; get; }
-        public bool detail { set; get; }
-        public int pos { set; get; }
-        public int limit { set; get; }
-       public order order { set; get; }
+        public string Start { set; get; }
+        public string Stop { set; get; }
+        public bool Detail { set; get; }
+        public int Pos { set; get; }
+        public int Limit { set; get; }
+       public order Order { set; get; }
 }
     public enum order
     {
-       asc ,desc
+        asc, desc
     }
     //public class EditAlarmOptions
     //{

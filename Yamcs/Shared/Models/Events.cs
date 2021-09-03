@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
     public class ListEventsResponse
     {
@@ -39,10 +33,10 @@ namespace Yamcs.Shared.Models
 
     public class CreateEventRequest
     {
-       public string message { set; get; }
-  public string type  { set; get; }
-   public EventSeverity severity { set; get; }
-  public string time { set; get; }
+        public string message { set; get; }
+        public string type { set; get; }
+        public EventSeverity severity { set; get; }
+        public string time { set; get; }
     }
 
     public class GetEventsOptions
@@ -50,40 +44,40 @@ namespace Yamcs.Shared.Models
         /**
          * Inclusive lower bound
          */
-      public string  start { set; get; }
+        public string Start { set; get; }
         /**
          * Exclusive upper bound
          */
-        public string stop { set; get; }
+        public string Stop { set; get; }
         /**
          * Search string
          */
-        public string q { set; get; }
-       public EventSeverity  severity { set; get; }
-  //source?: string | string[];
-  public int pos { set; get; }
-        public int  limit { set; get; }
+        public string Q { set; get; }
+        public EventSeverity Severity { set; get; }
+        //source?: string | string[];
+        public int Pos { set; get; }
+        public int Limit { set; get; }
         //order?: 'asc' | 'desc';
-}
+    }
 
     public class DownloadEventsOptions
     {
         /**
          * Inclusive lower bound
          */
-        public string start { set; get; }
+        public string Start { set; get; }
         /**
          * Exclusive upper bound
          */
-        public string stop { set; get; }
+        public string Stop { set; get; }
         /**
          * Search string
          */
-        public string q { set; get; }
-        public EventSeverity  severity {set; get;}
+        public string Q { set; get; }
+        public EventSeverity Severity { set; get; }
 
-  //source?: string | string[];
-  //delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
-}
+        //source?: string | string[];
+        //delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
+    }
 
 }

@@ -1,75 +1,27 @@
-﻿using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
-    public class SubscribeTMStatisticsRequest
-    {
-        public SubscribeTMStatisticsRequest(string Instance, string Processor)
-        {
-            instance = Instance;
-            processor = Processor;
-        }
 
-        public string instance { set; get; }
-        public string processor { set; get; }
-    }
-    public class StatisticsResponse 
-    {
-
-        public string instance { set; get; }
-        public string processor { set; get; }
-        public TmStatistics[] tmstats { set; get; }
-        [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime lastUpdated { set; get; }
-    }
-    public class TmStatistics
-    {
-
-        public string packetName { get; set; }
-
-        public string qulificationName { set; get; }
-        public string receivedPackets { set; get; }
-        public int subscribedParameterCount { set; get; }
-        [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime lastReceived { get; set; }
-        [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime lastPacketTime { set; get; }
-        public string packetRate { set; get; }
-        public string dataRate { set; get; }
-    }
-    public class DateTimeConverter : JsonConverter<DateTime>
-    {
-        private static readonly string _format = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";  //formato api?
-        //private static readonly string _format = "yyyy-MM-dd'T'HH:mm:ss.fff";
-
-
-        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            DateTime d = DateTime.ParseExact(reader.GetString(), _format, System.Globalization.CultureInfo.InvariantCulture);
-            //Console.WriteLine(d.ToLongTimeString());
-            return d;
-        }
-
-        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-        => writer.WriteStringValue(value.ToUniversalTime().ToString(_format));
-    }
 
     public class SubscribeParametersRequest
     {
-        public string instance { set; get; }
-        public string processor { set; get; }
-        public int[] id { set; get; }
-        public bool abortOnInvalid { set; get; }
-        public bool updateOnExpiration { set; get; }
+        public SubscribeParametersRequest(string instance, string processor, int[] id, bool abortOnInvalid, bool updateOnExpiration, bool sendFromCache, bool action)
+        {
+            Instance = instance;
+            Processor = processor;
+            Id = id;
+            AbortOnInvalid = abortOnInvalid;
+            UpdateOnExpiration = updateOnExpiration;
+            this.sendFromCache = sendFromCache;
+            Action = action;
+        }
+
+        public string Instance { set; get; }
+        public string Processor { set; get; }
+        public int[] Id { set; get; }
+        public bool AbortOnInvalid { set; get; }
+        public bool UpdateOnExpiration { set; get; }
         public bool sendFromCache { set; get; }
-        public bool action { set; get; }
+        public bool Action { set; get; }
     }
     public enum action { REPLACE, ADD, REMOVE }
     public class SubscribeParametersData
@@ -81,13 +33,19 @@ namespace Yamcs.Shared.Models
 
     public class SubscribeProcessorsRequest
     {
-        public string instance { set; get; }
-        public string processor { set; get; }
+        public SubscribeProcessorsRequest(string instance, string processor)
+        {
+            Instance = instance;
+            Processor = processor;
+        }
+
+        public string Instance { set; get; }
+        public string Processor { set; get; }
     }
 
     public class ListProcessorResponse
     {
-        public Processor[] processors { set; get; }
+        public Processor[] Processors { set; get; }
     }
     public class Processor
     {
@@ -108,15 +66,15 @@ namespace Yamcs.Shared.Models
 
     public class ReplayRequest
     {
-        public string start { set; get; }
-        public string stop { set; get; }
-        public ReplaySpeed speed { set; get; }
+        public string Start { set; get; }
+        public string Stop { set; get; }
+        public ReplaySpeed Speed { set; get; }
     }
 
     public class ReplaySpeed
     {
         //   type: 'AFAP' | 'FIXED_DELAY' | 'REALTIME';
-        public int param { set; get; }
+        public int Param { set; get; }
     }
 
 

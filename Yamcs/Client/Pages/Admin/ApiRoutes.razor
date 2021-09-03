@@ -1,28 +1,48 @@
 ﻿@page "/admin/apiroutes"
 @layout AdminLayout
-@inject HttpClient Http
+@inject YamcsClient client
 @using Yamcs.Shared
 
-<h1>Admin Home</h1>
+<h1>API routes</h1>
 
 
-
+@if(Routeresponse==null)
+ {
+    <div class= "spinner"></div>
+ }
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Method</th>
+                <th>Requests</th>
+                <th>Errors</th>
+                <th>HttP</th>
             </tr>
         </thead>
         <tbody>
-
+            @foreach (var item in Routeresponse.Routes)
+            {
+                <tr>
+                    <td>@item.Method</td>
+                    <td>@item.RequestCount</td>
+                    <td>@item.ErrorCount</td>
+                    <td>@item.HttpMethod @item.Url</td>
+                </tr>
+            }
 
         </tbody>
     </table>
 }
 
 @code {
+    ListRoutesResponse Routeresponse;
 
+    protected override async Task OnInitializedAsync()
+    {
+         Routeresponse = await client.getRoutes();
+    }
 
 }

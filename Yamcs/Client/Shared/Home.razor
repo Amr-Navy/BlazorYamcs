@@ -1,17 +1,17 @@
 ﻿@page "/home"
 @inject HttpClient Http
 @using System.Threading
-
 @inject YamcsClient client
 @using System.Text
 <h1>Home</h1>
-@if (response == null)
+@if (stat == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
-    Console.WriteLine("ok");
+   
     <table class="table">
         <thead>
             <tr>
@@ -23,16 +23,16 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var st in response.data.tmstats)
+            @foreach (var st in stat.Data.Tmstats)
             {
                 <tr>
-                    <td>@st.packetName</td>
+                    <td>@st.PacketName</td>
                     <td>
-                        @st.lastPacketTime.ToString("yyyy-MM-dd HH:mm:ss.fff")
+                        @st.LastPacketTime.ToString("yyyy-MM-dd HH:mm:ss.fff")
                     </td>
-                    <td>@st.lastReceived.ToString("yyyy-MM-dd HH:mm:ss.fff")</td>
-                    <td>@st.packetRate</td>
-                    <td>@st.dataRate</td>
+                    <td>@st.LastReceived.ToString("yyyy-MM-dd HH:mm:ss.fff")</td>
+                    <td>@st.PacketRate</td>
+                    <td>@st.DataRate</td>
                 </tr>
             }
         </tbody>
@@ -40,140 +40,21 @@ else
 }
 
 @code {
-    // private PacketNameResponse Packetsresponse;
-    private StatisticsResponse stat;
-    WebSocketReplayResponse<StatisticsResponse> response;
-    // CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
+    private WebSocketResponse<StatisticsResponse> stat;
     private string timestamp;
-    // ClientWebSocket webSocket = new ClientWebSocket();
     string log = "";
-    // JsonDocument document;
+
 
     protected override async Task OnInitializedAsync()
     {
-        //Packetsresponse = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
-        //await webSocket.ConnectAsync(new Uri("ws://localhost:8090/api/websocket"), disposalTokenSource.Token);
-        //await SendMessageAsync();
-        //_ = ReceiveLoop();
-        client.webclient.MessageReceived.Subscribe(x =>
+        client.webclient.Streams.MessageReceived.Subscribe(x =>
         {
-            Console.WriteLine("this is");
-            response = x;
+            stat = x;
             _ = InvokeAsync(() => StateHasChanged());
         });
+       // await client.CreateTMStatisticsSubscription("simulator", "realtime");
+        await client.CreateTimeSubscription("simulator", "realtime");
         await client.CreateTMStatisticsSubscription("simulator", "realtime");
 
-
     }
-
-    //async Task SendMessageAsync()
-    //{
-    //    // log += $"Sending: {message}\n";
-    //    //string message =@"
-    //    //    {
-    //    //      ""type"": ""tmstats"",
-    //    //       ""id"": 4,
-    //    //       ""options"": {
-    //    //        ""instance"": ""simulator"",
-    //    //         ""processor"": ""realtime""
-    //    //     }
-    //    //     }";
-    //    SubscribeTMStatisticsRequest Options = new SubscribeTMStatisticsRequest("simulator", "realtime");
-    //    WebSocketRequest<SubscribeTMStatisticsRequest> WebsocketRequest = new WebSocketRequest<SubscribeTMStatisticsRequest>();
-    //    WebsocketRequest.type = "tmstats";
-    //    WebsocketRequest.id = 4;
-
-    //    WebsocketRequest.options = Options;
-    //    string RequestString = JsonSerializer.Serialize(WebsocketRequest);
-    //    var dataToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(RequestString));
-    //    await webSocket.SendAsync(dataToSend, WebSocketMessageType.Text, true, disposalTokenSource.Token);
-    //}
-    //async Task ReceiveLoop()
-    //{
-    //    var buffer = new ArraySegment<byte>(new byte[4096]);
-
-    //    while (!disposalTokenSource.IsCancellationRequested)
-    //    {
-
-
-    //        // Note that the received block might only be part of a larger message. If this applies in your scenario,
-    //        // check the received.EndOfMessage and consider buffering the blocks until that property is true.
-    //        // Or use a higher-level library such as SignalR.
-    //        var received = await webSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
-
-    //        //Console.WriteLine("ok");
-    //        var jsonString = Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
-    //        // Console.WriteLine
-    //        if (jsonString.Contains("reply"))
-    //        {
-    //            Console.WriteLine("this is reply {0}", jsonString);
-    //        }
-    //        else
-    //        {
-    //            try
-    //            {
-    //                JsonSerializerOptions options = new()
-    //                {
-    //                    ReadCommentHandling = JsonCommentHandling.Skip,
-    //                    AllowTrailingCommas = true,
-
-    //                };
-    //                // WebSocketReplayResponse<Statistics> resp = new WebSocketReplayResponse<Statistics>();
-    //                response = JsonSerializer.Deserialize<WebSocketReplayResponse<Statistics>>(jsonString, options);
-    //                Console.WriteLine("done");
-    //            }
-    //            catch (Exception ex)
-    //            {
-
-    //                Console.WriteLine(ex.Message);
-    //            }
-
-    //        }
-
-
-    //        //var dyn = JsonSerializer.Deserialize<Dictionary<string, object>>(receivedAsText);
-
-    //        //foreach (var item in dyn)
-    //        //{
-    //        //    Console.WriteLine("Key is {0} Value is {1}", item.Key, item.Value.ToString());
-    //        //}
-    //        //try
-    //        //{
-    //        //    document = JsonDocument.Parse(jsonString);
-    //        //}
-    //        //catch (Exception ex)
-    //        //{
-
-    //        //    Console.WriteLine(ex.Message);
-    //        //}
-
-    //        //Console.WriteLine("second " +disposalTokenSource.IsCancellationRequested.ToString());
-    //        ////JsonElement root = document.RootElement;
-    //        ////JsonElement typeelement = root.GetProperty("type");
-    //        ////Console.WriteLine(typeelement.GetString());
-    //        //if (typeelement.GetString() == "tmstats")
-    //        //{
-    //        //    // stat = JsonSerializer.Deserialize<Statistics>(jsonString);
-    //        //    Console.WriteLine("tmstats");
-    //        //}
-
-
-    //        log += $"Received: {jsonString}\n";
-    //        //Console.WriteLine(jsonString);
-    //        StateHasChanged();
-
-    //    }
-    //    //  StateHasChanged();
-
-    //}
-    //public void Dispose()
-    //{
-    //    disposalTokenSource.Cancel();
-    //    _ = webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
-    //}
-    //public class PacketNameResponse
-    //{
-    //    public string[] name { get; set; }
-
-    //}
 }

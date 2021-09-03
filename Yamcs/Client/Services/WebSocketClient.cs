@@ -1,110 +1,110 @@
-﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net.WebSockets;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Yamcs.Shared.Models;
+using YamcsWebsocket.Client;
+
 namespace Yamcs.Client.Services
 {
     public class WebSocketClient
     {
 
-        // public event EventHandler<WebSocketReplayResponse<T>> Notify;
-        private readonly Subject<WebSocketReplayResponse<StatisticsResponse>> _messageReceivedSubject = new Subject<WebSocketReplayResponse<StatisticsResponse>>();
-        public IObservable<WebSocketReplayResponse<StatisticsResponse>> MessageReceived => _messageReceivedSubject.AsObservable();
-
-        private ClientWebSocket clientWebSocket;
+        private int _id = 0;
+        private ClientWebSocket _clientWebSocket;
+        private readonly YamcsWebsocketPublicHandler _publicHandler;
+        public YamcsClientStreams Streams { get; } = new YamcsClientStreams();
         CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
-        public  WebSocketClient(ClientWebSocket _clientWebSocket)
+        public WebSocketClient(ClientWebSocket clientWebSocket)
         {
-            clientWebSocket = _clientWebSocket;
-           
-            
+            _clientWebSocket = clientWebSocket;
+            _publicHandler = new YamcsWebsocketPublicHandler(Streams);
+
         }
-
-      
-
-        public async Task Connect ()
+        public async Task Connect()
         {
+            try
+            {
+                await _clientWebSocket.ConnectAsync(new Uri("ws://localhost:8090/api/websocket"), disposalTokenSource.Token);
+                _ = Receive();
+            }
+            catch (Exception ex)
+            {
 
-            await clientWebSocket.ConnectAsync(new Uri("ws://localhost:8090/api/websocket"), disposalTokenSource.Token);
-            Console.WriteLine("connected");
+                Console.WriteLine(ex.Message);
+            }
+
+
 
         }
         public async Task Send<T>(WebSocketRequest<T> request)
         {
-            string RequestString = JsonSerializer.Serialize(request);
-            var dataToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(RequestString));
-            await clientWebSocket.SendAsync(dataToSend, WebSocketMessageType.Text, true, disposalTokenSource.Token);
-        }
-        public  async Task CreateSubscribtion<T> (string _type,int _id,T _option)
-        {
-            if (clientWebSocket.State != WebSocketState.Open)
+
+            if (_clientWebSocket.State != WebSocketState.Open)
             {
                 await Connect();
+
             }
-            WebSocketRequest<T> Request = new()
-            {
-                type = _type,
-                id = _id,
-                options = _option
-            };
-           await Send(Request);
-           await Receive();
+            request.Id = _id++;
+
+            string RequestString = YamcsSerialization.Serialize(request);
+
+            var dataToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(RequestString));
+            await _clientWebSocket.SendAsync(dataToSend, WebSocketMessageType.Text, true, disposalTokenSource.Token);
+
+
         }
-      
+        //public  async Task CreateSubscribtion<T> (string _type,int _id,T _option)
+        //{
+        //    if (_clientWebSocket.State != WebSocketState.Open)
+        //    {
+        //        await Connect();
+
+        //    }
+        //    WebSocketRequest<T> Request = new()
+        //    {
+        //        type = _type,
+        //        id = _id,
+        //        options = _option
+        //    };
+        //   await Send(Request);
+
+        //}
+
+
         public async Task Receive()
         {
             var buffer = new ArraySegment<byte>(new byte[4096]);
-            //WebSocketReplayResponse<T> resp = new WebSocketReplayResponse<T>();
+            Console.WriteLine(disposalTokenSource.IsCancellationRequested);
             while (!disposalTokenSource.IsCancellationRequested)
             {
-                var received = await clientWebSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
+                try
+                {
+                    //Console.WriteLine("in");
 
-                //Console.WriteLine("ok");
-                var jsonString = Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
-                // Console.WriteLine
-                if (jsonString.Contains("reply"))
-                {
-                    //_messageReceivedSubject.OnNext(jsonString);
-                    //Console.WriteLine("this is reply {0}", jsonString);
-                   // _messageReceivedSubject.OnNext(jsonString);
-                    // var v = JsonSerializer.Deserialize<WebSocketReplayResponse<T>>(jsonString);
-                    // Notify.Invoke(this, v);
+                    var received = await _clientWebSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
+
+                    var jsonString = Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
+                    _publicHandler.OnMessage(jsonString);
                 }
-                else
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var resp =JsonSerializer.Deserialize<WebSocketReplayResponse<StatisticsResponse>>(jsonString);
-                        _messageReceivedSubject.OnNext(resp);
-                        Console.WriteLine("done");
-                    }
-                    catch (Exception ex)
-                    {
-                        
-                        Console.WriteLine(ex.Message);
-                       
-                    }
-                 
+
+                    //   Console.WriteLine(ex.Message);
                 }
-                
+
             }
-            
+
         }
-            public async void Close()
+        public async void Close()
         {
             disposalTokenSource.Cancel();
-           await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+            await _clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
         }
 
-       
+
     }
 }

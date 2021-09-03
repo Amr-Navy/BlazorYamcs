@@ -1,10 +1,26 @@
 ﻿@page "/admin/accesscontrol/users"
 @using Yamcs.Shared
+@layout AdminLayout
 @inject HttpClient Http
-
+@inject YamcsClient client
+@inject NavigationManager uriHelper
 <h1>Users</h1>
 
+<div class="row">
+    <div class="col ">
 
+        <div class="card-body">
+            <a class="btn btn-success" href="/Admin/createUser"><i class="oi oi-plus"></i> Create New User</a>
+        </div>
+
+    </div>
+</div>
+@if (UserInfoResponse == null)
+{
+
+    <p><em>Loading User Information...</em></p>
+    <div class="spinner"></div>
+}
 
 else
 {
@@ -20,12 +36,35 @@ else
             </tr>
         </thead>
         <tbody>
-            </tbody>
+            @foreach (var user in UserInfoResponse.users)
+            {
+                <tr>
+                    <td>@user.name</td>
+                    <td>@user.creationTime</td>
+                    <td>@user.active</td>
+                    <td>@user.displayName</td>
+                    <td>@user.email</td>
+                    <td>@user.creationTime</td>
+                    <td><a href="#" class="btn btn-primary m-1">View</a></td>
+                    <td><a href="/Admin/editUser/@user.name" class="btn btn-primary m-1">Edit</a></td>
+                    <td><a href="#" class="btn btn-danger m-1" @onclick="@(()=>Delete(user.name))">Delete</a></td>
+                </tr>
+            }
+        </tbody>
 
     </table>
 }
 
 @code {
-   
+    ListUsersResponse UserInfoResponse;
+    protected override async Task OnInitializedAsync()
+    {
+        UserInfoResponse = await client.getUsers();
+    }
 
+    public async void Delete(string username)
+    {
+        await client.deleteUser(username);
+        uriHelper.NavigateTo("/admin/accesscontrol/users");
+    }
 }

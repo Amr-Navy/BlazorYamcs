@@ -8,13 +8,13 @@ namespace Yamcs.Shared.Models
 {
     public class GetParameterValuesOptions
     {
-      public string  start { set; get; }
-        public string stop { set; get; }
-       public int pos { set; get; }
-        public int limit { set; get; }
-        public bool norepeat { set; get; }
+      public string  Start { set; get; }
+        public string Stop { set; get; }
+       public int Pos { set; get; }
+        public int Limit { set; get; }
+        public bool Norepeat { set; get; }
       //  format?: 'csv';
-        public order order { set; get; }
+        public order Order { set; get; }
     }
 
     public class DownloadParameterValuesOptions

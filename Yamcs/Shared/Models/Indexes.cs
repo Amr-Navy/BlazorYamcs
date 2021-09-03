@@ -8,15 +8,15 @@ namespace Yamcs.Shared.Models
 {
     public class IndexGroup
     {
-     public NamedObjectId id { set; get; }
-  public IndexEntry[] entry { set; get; }
+     public NamedObjectId Id { set; get; }
+  public IndexEntry[] Entry { set; get; }
 }
 
     public class IndexEntry
     {
-      public string  start { set; get; }
-        public string stop { set; get; }
-       public int count { set; get; }
+      public string  Start { set; get; }
+        public string Stop { set; get; }
+       public int Count { set; get; }
     }
     //public class GetCommandIndexOptions
     //{
@@ -28,17 +28,17 @@ namespace Yamcs.Shared.Models
 
     public class GetEventIndexOptions
     {
-        public string start { set; get; }
-        public string stop { set; get; }
-        public int mergeTime { set; get; }
-        public int  limit { set; get; }
+        public string Start { set; get; }
+        public string Stop { set; get; }
+        public int MergeTime { set; get; }
+        public int  Limit { set; get; }
     }
 
     public class GetCompletenessIndexOptions
     {
-        public string start { set; get; }
-        public string stop { set; get; }
-        public int limit{ set; get; }
+        public string Start { set; get; }
+        public string Stop { set; get; }
+        public int Limit { set; get; }
 }
 
 

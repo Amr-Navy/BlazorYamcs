@@ -1,28 +1,67 @@
 ﻿@page "/admin/accesscontrol/groups"
+@using Yamcs.Shared
 @layout AdminLayout
 @inject HttpClient Http
-@using Yamcs.Shared
+@inject YamcsClient client
+@inject NavigationManager uriHelper
+<h1>Users</h1>
 
-<h1>Admin Home</h1>
+<div class="row">
+    <div class="col ">
 
+        <div class="card-body">
+            <a class="btn btn-success" href="/Admin/createGroup"><i class="oi oi-plus"></i> Create New Group</a>
+        </div>
 
+    </div>
+</div>
+@if (GroupsInfoResponse == null)
+{
 
+    <p><em>Loading group Information...</em></p>
+    <div class="spinner"></div>
+}
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Group</th>
+                <th>Members</th>
             </tr>
         </thead>
-       
+        <tbody>
+            @foreach (var group in GroupsInfoResponse.groups)
+            {
+                <tr>
+                    <td>@group.name</td>
+                    <td><ul>
+                        @foreach (var user in group.users)
+                        {
+                            <li>@user.name</li>
+                        }
+                        </ul></td>
+                    <td><a href="/Admin/editGroup/@group.name" class="btn btn-primary m-1">Edit</a></td>
+                    <td><a href="#" class="btn btn-danger m-1" @onclick="@(()=>Delete(group.name))">Delete</a></td>
+                </tr>
+            }
+        </tbody>
 
-          
     </table>
 }
 
 @code {
-   
+    ListGroupsRespons GroupsInfoResponse;
+    protected override async Task OnInitializedAsync()
+    {
+        GroupsInfoResponse = await client.getGroups();
+    }
 
-
+    public async void Delete(string groupname)
+    {
+        await client.deleteGroup(groupname);
+        uriHelper.NavigateTo("/admin/accesscontrol/groups");
+    }
 }
+

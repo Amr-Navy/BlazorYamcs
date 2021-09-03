@@ -1,37 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yamcs.Shared.Models
+﻿namespace Yamcs.Shared.Models
 {
     public class ReplicationInfo
     {
-       public ReplicationMaster[] masters { set; get; }
-  public ReplicationSlave[] slaves { set; get; }
-}
+        public ReplicationMaster[] Masters { set; get; }
+        public ReplicationSlave[] Slaves { set; get; }
+    }
 
     public class ReplicationMaster
     {
-        public string instance { set; get; }
-         public string []streams { set; get; }
-        public string localAddress { set; get; }
-        public string remoteAddress { set; get; }
-        public bool push { set; get; }
-        public string  pushTo { set; get; }
-        public int localTx { set; get; }
-        public int nextTx { set; get; }
+        public string Instance { set; get; }
+        public string[] Streams { set; get; }
+        public string LocalAddress { set; get; }
+        public string RemoteAddress { set; get; }
+        public bool Push { set; get; }
+        public string PushTo { set; get; }
+        public int LocalTx { set; get; }
+        public int NextTx { set; get; }
     }
 
     public class ReplicationSlave
     {
-     public string   instance { set; get; }
-        public string streams{ set; get; }
- public string localAddress{ set; get; }
-  public string  remoteAddress{ set; get; }
- public bool push { set; get; }
- public string pullFrom{ set; get; }
- public int  tx { set; get; }
+        public string Instance { set; get; }
+        public string Streams { set; get; }
+        public string LocalAddress { set; get; }
+        public string RemoteAddress { set; get; }
+        public bool Push { set; get; }
+        public string PullFrom { set; get; }
+        public int Tx { set; get; }
     }
 }

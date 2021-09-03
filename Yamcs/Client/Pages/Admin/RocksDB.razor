@@ -1,27 +1,47 @@
 ﻿@page "/admin/rocksdb"
 @layout AdminLayout
-@inject HttpClient Http
+@inject YamcsClient client
 @using Yamcs.Shared
 
-<h1>Admin Home</h1>
+<h1>Open databases</h1>
 
 
+@if(resp==null)
+            {
 
+    <div class="spinner"></div>
+            }
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Data Dir</th>
+                <th>Tablespace</th>
+                <th>DB Path</th>
             </tr>
         </thead>
         <tbody>
-
+            @foreach (var database in resp.Databases)
+            {
+                <tr>
+                    <td>@database.DataDir</td>
+                    <td>@database.tablespace</td>
+                    <td>@database.DataDir</td>
+                </tr>
+                
+            }
         </tbody>
     </table>
 }
 
 @code {
-   
+    ListRocksdbResponse resp;
+
+    protected override async Task OnInitializedAsync()
+    {
+        resp = await client.getRocksDbDatabaseProperties();
+    }
 
 }

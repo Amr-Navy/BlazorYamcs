@@ -1,28 +1,43 @@
 ﻿@page "/admin/processortypes"
 @layout AdminLayout
-@inject HttpClient Http
+@inject YamcsClient client
 @using Yamcs.Shared
 
-<h1>Admin Home</h1>
+<h1>Processor types</h1>
 
-
+@if(processorTypes==null)
+            {
+                <div class="spinner"></div>
+            }
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Name</th>
             </tr>
         </thead>
         <tbody>
+            @foreach (var type in processorTypes.Types)
+            {
+                <tr>
+                   <td>@type</td>
+                </tr>
+            }
 
-         
         </tbody>
     </table>
 }
 
 @code {
+    ListProcessorTypesResponse processorTypes;
 
+    protected override async Task OnInitializedAsync()
+    {
+        processorTypes = await client.getProcessorTypes();
+
+    }
 
 
 }

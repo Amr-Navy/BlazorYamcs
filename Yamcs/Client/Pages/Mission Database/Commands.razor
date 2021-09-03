@@ -1,16 +1,19 @@
 ﻿@page "/missiondb/commands"
 @inject HttpClient Http
-
+@inject YamcsClient client 
 <h1>Commands</h1>
 
 
 
-@if (forecasts == null)
+@if (commandpages == null)
 {
     <p><em>Loading...</em></p>
+    <div class="spinner"></div>
 }
 else
 {
+    <Pagination TotaPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+                SelectedPage="SelectedPage"></Pagination>
     <table class="table">
         <thead>
             <tr>
@@ -20,27 +23,44 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts.name)
+            @foreach (var command in commandpages.Commands)
             {
-                <tr>
-                    <td>@forecast</td>
-                </tr>
+            <tr>
+                <td>@command.Name</td>
+                @if(command.Significance!=null)
+                    {
+                <td>@command.Significance.consequence</td>
+
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+            </tr>
             }
         </tbody>
     </table>
 }
 
 @code {
-    private PacketNameResponse forecasts;
+    private CommandsPage commandpages;
+    private int totalPageQuantity;
+    private int currentPage = 1;
 
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadCommands(page);
+    }
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<PacketNameResponse>("archive/simulator/packet-names");
+
+        await LoadCommands();
     }
 
-    public class PacketNameResponse
-    { 
-    public string[] name { get; set; }
-
+    async Task LoadCommands(int pagee = 1, int quantityperpage = 100)
+    {
+        commandpages = await client.getCommands("simulator", pagee, quantityperpage);
+        totalPageQuantity = commandpages.TotalSize;
     }
 }

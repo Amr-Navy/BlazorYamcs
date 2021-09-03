@@ -1,0 +1,49 @@
+﻿@inject HttpClient client
+@inject IJSRuntime js
+@using System.Text.Json
+@using System.IO
+@layout AdminLayout
+<EditForm Model="@User" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group ">
+        <div>
+            <label>User Name : </label>
+            <div>
+                <InputText @bind-Value="@User.name" />
+                <ValidationMessage For="@(() => User.name)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Dsiplay Name :</label>
+        <div>
+            <InputText @bind-Value="@User.displayName"> </InputText>
+            <ValidationMessage For="@(() => User.displayName)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Email :</label>
+            <div>
+                <InputText @bind-Value="@User.email" />
+                <ValidationMessage For="@(() => User.email)" />
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+
+</EditForm>
+
+
+@code {
+    public static DateTime dt = DateTime.Today;
+
+    [Parameter] public UserInfo User { get; set; }
+
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

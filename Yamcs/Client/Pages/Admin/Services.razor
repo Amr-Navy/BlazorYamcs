@@ -1,27 +1,48 @@
 ﻿@page "/admin/services"
 @layout AdminLayout
-@inject HttpClient Http
+
+@inject YamcsClient client;
 @using Yamcs.Shared
 
 <h1>Services</h1>
 
 
+@if(servicesResponse==null)
+            {
 
+    <div class="spinner"></div>
+            }
 
 else
 {
     <table class="table">
         <thead>
             <tr>
+                <th>Name</th>
+                <th>Class</th>
             </tr>
         </thead>
         <tbody>
 
-        </tbody>
+            @foreach (var service in servicesResponse.Services)
+            {
+            <tr>
+                <td>@service.Name</td>
+                <td>@service.ClassName</td>
+            </tr>
+                    }
+              
+            </tbody>
     </table>
 }
 
 @code {
- 
+    ListServicesResponse servicesResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        servicesResponse = await client.getService("simulator");
+
+    }
 
 }
