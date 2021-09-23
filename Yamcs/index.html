@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8" />
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+
+    <script src="http://localhost:8082/3d/libs/Cesium-1.81/Build/Cesium/Cesium.js"></script>
+    <script src="http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/Sandcastle-header.js"></script>
+
+    <title>Cesium Viewer</title>
+</head>
+<style>
+    @import url(http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/CesiumSandcastle.css);
+
+    @import url(http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/templates/bucket.css);
+</style>
+
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay">
+        <h1>Loading...</h1>
+    </div>
+    <div id="toolbar"></div>
+   	<script type="text/javascript">
+	
+ var viewer = new Cesium.Viewer("cesiumContainer",{
+                  Geocoder: false,
+                  Animation: true,
+                  CreditsDisplay: false,
+                  Timeline: false,
+                  FullscreenButton: false
+ });
+viewer.scene.primitives.add(Cesium.createOsmBuildings());
+// Add a WMS imagery layer
+var imageryLayers = viewer.imageryLayers;
+/*imageryLayers.addImageryProvider(
+  new Cesium.WebMapServiceImageryProvider({
+    url:"http://localhost:8082/geoserver/wms",
+    layers: "topp:states",
+    parameters: {
+      transparent: true,
+      format: "image/png",
+    },
+  })
+);*/
+imageryLayers.addImageryProvider(
+    new Cesium.WebMapServiceImageryProvider({
+        url: "http://localhost:8082/geoserver/wms",
+        layers: "india:india_state",
+        parameters: {
+            transparent: true,
+            format: "image/png",
+        },
+    })
+);
+
+
+
+// Start off looking at USA.
+viewer.camera.setView({
+    destination: Cesium.Rectangle.fromDegrees(
+        -125.77,
+        49.83,
+        -62.00,
+        23.00
+    ),
+});
+
+Sandcastle.addToolbarMenu(
+    [{
+            text: "Select Layer",
+            onselect: function() {
+
+            }
+        },
+        {
+            text: "USA Population-Simple Style",
+            onselect: function() {
+
+                viewer.dataSources.add(
+                    Cesium.GeoJsonDataSource.load(
+                        "http://localhost:8082/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
+                    )
+                );
+                /* viewer.camera.lookAt(
+   Cesium.Cartesian3.fromDegrees(-98.0, 40.0),
+    new Cesium.Cartesian3(0.0, -4790000.0, 3930000.0)
+  );*/
+                var rectangle = Cesium.Rectangle.fromDegrees(-126.6, 21.76, -65.44, 52.64);
+
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(-97.98, 18.55, 4300000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-65.0),
+                        roll: 0.0,
+                    },
+                });
+
+            },
+        },
+
+        {
+            text: "USA Population- Extrude",
+            onselect: function() {
+                Cesium.Math.setRandomNumberSeed(0);
+                var usa = Cesium.GeoJsonDataSource.load(
+                    "http://localhost:8082/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
+                );
+                usa
+                    .then(function(dataSource) {
+                        viewer.dataSources.add(dataSource);
+
+                        //Get the array of entities
+                        var entities = dataSource.entities.values;
+
+                        var colorHash = {};
+                        for (var i = 0; i < entities.length; i++) {
+                            //For each entity, create a random color based on the state name.
+                            //Some states have multiple entities, so we store the color in a
+                            //hash so that we use the same color for the entire state.
+                            var entity = entities[i];
+                            var name = entity.name;
+                            var color = colorHash[name];
+                            if (!color) {
+                                color = Cesium.Color.fromRandom({
+                                    alpha: 1.0,
+                                });
+                                colorHash[name] = color;
+                            }
+
+                            //Set the polygon material to our random color.
+                            entity.polygon.material = color;
+                            //Remove the outlines.
+                            entity.polygon.outline = false;
+
+                            //Extrude the polygon based on the state's population.  Each entity
+                            //stores the properties for the GeoJSON feature it was created from
+                            //Since the population is a huge number, we divide by 50.
+                            entity.polygon.extrudedHeight =
+                                entity.properties.PERSONS / 50.0;
+                        }
+                    })
+                    .otherwise(function(error) {
+                        //Display any errrors encountered while loading.
+                        window.alert(error);
+                    });
+
+                var rectangle = Cesium.Rectangle.fromDegrees(-126.6, 21.76, -65.44, 52.64);
+
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(-97.98, 18.55, 4300000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-65.0),
+                        roll: 0.0,
+                    },
+					easingFunction: Cesium.EasingFunction.QUADRATIC_IN_OUT,
+                    duration: 5
+                });
+
+
+            }
+        },
+        {
+            text: "Buildings",
+            onselect: function() {
+                Cesium.Math.setRandomNumberSeed(0);
+                var promise = Cesium.GeoJsonDataSource.load(
+                    "building.geojson"
+                );
+                promise
+                    .then(function(dataSource) {
+                        viewer.dataSources.add(dataSource);
+
+                        //Get the array of entities
+                        var entities = dataSource.entities.values;
+
+                        var colorHash = {};
+                        for (var i = 0; i < entities.length; i++) {
+                            //For each entity, create a random color based on the state name.
+                            //Some states have multiple entities, so we store the color in a
+                            //hash so that we use the same color for the entire state.
+                            var entity = entities[i];
+                            var name = entity.id;
+                            var color = colorHash[name];
+                            if (!color) {
+                                color = Cesium.Color.fromRandom({
+                                    alpha: 1.0,
+                                });
+                                colorHash[name] = color;
+                            }
+
+                            //Set the polygon material to our random color.
+                            entity.polygon.material = color;
+                            //Remove the outlines.
+                            entity.polygon.outline = false;
+
+                            //Extrude the polygon based on the state's population.  Each entity
+                            //stores the properties for the GeoJSON feature it was created from
+                            //Since the population is a huge number, we divide by 50.
+                            entity.polygon.extrudedHeight =
+                                entity.properties.height;
+                        }
+                    })
+                    .otherwise(function(error) {
+                        //Display any errrors encountered while loading.
+                        window.alert(error);
+                    });
+
+                /*	viewer.camera.lookAt(
+                    Cesium.Cartesian3.fromDegrees(77.369,28.6321),
+                    new Cesium.Cartesian3(0.0, -1000, 1500)
+                  );*/
+                var rectangle = Cesium.Rectangle.fromDegrees(77.365, 28.628, 77.3739, 28.636);
+
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(77.37021, 28.61397, 1500.0),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-35.0),
+                        roll: 0.0,
+                    },
+					easingFunction: Cesium.EasingFunction.QUADRATIC_IN_OUT,
+                    duration: 5
+                });
+
+
+
+            }
+        },
+        {
+            text: "India",
+            onselect: function() {
+                Cesium.Math.setRandomNumberSeed(0);
+                var promise = Cesium.GeoJsonDataSource.load(
+                    "http://localhost:8082/geoserver/india/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=india%3Aindia_state&outputFormat=application%2Fjson"
+                );
+                promise
+                    .then(function(dataSource) {
+                        viewer.dataSources.add(dataSource);
+
+                        //Get the array of entities
+                        var entities = dataSource.entities.values;
+
+                        var colorHash = {};
+                        for (var i = 0; i < entities.length; i++) {
+                            //For each entity, create a random color based on the state name.
+                            //Some states have multiple entities, so we store the color in a
+                            //hash so that we use the same color for the entire state.
+                            var entity = entities[i];
+                            var name = entity.name;
+                            var color = colorHash[name];
+                            if (!color) {
+                                color = Cesium.Color.fromRandom({
+                                    alpha: 1.0,
+                                });
+                                colorHash[name] = color;
+                            }
+
+                            //Set the polygon material to our random color.
+                            entity.polygon.material = color;
+                            //Remove the outlines.
+                            entity.polygon.outline = false;
+
+                            //Extrude the polygon based on the state's population.  Each entity
+                            //stores the properties for the GeoJSON feature it was created from
+                            //Since the population is a huge number, we divide by 50.
+                            entity.polygon.extrudedHeight =
+                                entity.properties.gid * 5000;
+                        }
+                    })
+                    .otherwise(function(error) {
+                        //Display any errrors encountered while loading.
+                        window.alert(error);
+                    });
+
+                /*		viewer.camera.lookAt(
+                    Cesium.Cartesian3.fromDegrees(82.0,26.0),
+                    new Cesium.Cartesian3(0.0, -4790000.0, 3930000.0)
+                  );*/
+                var rectangle = Cesium.Rectangle.fromDegrees(77.365, 28.628, 77.3739, 28.636);
+
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(78.59, 3.16, 4930000.0),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-65.0),
+                        roll: 0.0,
+                    },
+                });
+
+
+
+
+            }
+        },
+
+        {
+            text: "Remove All",
+            onselect: function() {
+                viewer.dataSources.removeAll();
+                viewer.clock.clockRange = Cesium.ClockRange.UNBOUNDED;
+                viewer.clock.clockStep = Cesium.ClockStep.SYSTEM_CLOCK;
+            }
+        }
+
+
+    ],
+    "toolbar"
+);
+
+Sandcastle.reset = function() {
+    viewer.dataSources.removeAll();
+    viewer.clock.clockRange = Cesium.ClockRange.UNBOUNDED;
+    viewer.clock.clockStep = Cesium.ClockStep.SYSTEM_CLOCK;
+};
+
+
+
+	</script>
+  </body>
+</html>
