@@ -9,15 +9,15 @@
     <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 
-    <script src="http://localhost:8082/3d/libs/Cesium-1.81/Build/Cesium/Cesium.js"></script>
-    <script src="http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/Sandcastle-header.js"></script>
+    <script src="http://40.117.232.169:8080/3d/libs/Cesium-1.85/Build/Cesium/Cesium.js"></script>
+    <script src="http://40.117.232.169:8080/3d/libs/Cesium-1.85/Apps/Sandcastle/Sandcastle-header.js"></script>
 
     <title>Cesium Viewer</title>
 </head>
 <style>
-    @import url(http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/CesiumSandcastle.css);
+    @import url(http://40.117.232.169:8080/3d/libs/Cesium-1.85/Apps/Sandcastle/CesiumSandcastle.css);
 
-    @import url(http://localhost:8082/3d/libs/Cesium-1.81/Apps/Sandcastle/templates/bucket.css);
+    @import url(http://40.117.232.169:8080/3d/libs/Cesium-1.85/Apps/Sandcastle/templates/bucket.css);
 </style>
 
 <body>
@@ -40,7 +40,7 @@ viewer.scene.primitives.add(Cesium.createOsmBuildings());
 var imageryLayers = viewer.imageryLayers;
 /*imageryLayers.addImageryProvider(
   new Cesium.WebMapServiceImageryProvider({
-    url:"http://localhost:8082/geoserver/wms",
+    url:"http://40.117.232.169:8080/geoserver/wms",
     layers: "topp:states",
     parameters: {
       transparent: true,
@@ -50,7 +50,7 @@ var imageryLayers = viewer.imageryLayers;
 );*/
 imageryLayers.addImageryProvider(
     new Cesium.WebMapServiceImageryProvider({
-        url: "http://localhost:8082/geoserver/wms",
+        url: "http://40.117.232.169:8080/geoserver/wms",
         layers: "india:india_state",
         parameters: {
             transparent: true,
@@ -84,7 +84,7 @@ Sandcastle.addToolbarMenu(
 
                 viewer.dataSources.add(
                     Cesium.GeoJsonDataSource.load(
-                        "http://localhost:8082/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
+                        "http://40.117.232.169:8080/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
                     )
                 );
                 /* viewer.camera.lookAt(
@@ -110,7 +110,7 @@ Sandcastle.addToolbarMenu(
             onselect: function() {
                 Cesium.Math.setRandomNumberSeed(0);
                 var usa = Cesium.GeoJsonDataSource.load(
-                    "http://localhost:8082/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
+                    "http://40.117.232.169:8080/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&outputFormat=application%2Fjson"
                 );
                 usa
                     .then(function(dataSource) {
@@ -239,7 +239,7 @@ Sandcastle.addToolbarMenu(
             onselect: function() {
                 Cesium.Math.setRandomNumberSeed(0);
                 var promise = Cesium.GeoJsonDataSource.load(
-                    "http://localhost:8082/geoserver/india/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=india%3Aindia_state&outputFormat=application%2Fjson"
+                    "http://40.117.232.169:8080/geoserver/india/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=india%3Aindia_state&outputFormat=application%2Fjson"
                 );
                 promise
                     .then(function(dataSource) {
